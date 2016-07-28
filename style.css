@@ -1,0 +1,64 @@
+/* GENERAL */
+
+li {
+list-style: none;
+}
+
+
+
+
+/* ALIGNMENT */
+
+
+
+
+/* FONTS */
+
+body {
+font: 18px Verdana, sans-serif;
+line-height: 23px;
+}
+
+h1 {
+letter-spacing: 2px;
+	line-height: 40px;
+}
+
+
+
+
+/* HEADER */
+
+
+
+
+/* FORM */
+
+
+
+
+/* LIST */
+
+
+
+
+/* HOME */
+
+
+
+
+
+@media only screen and (min-width: 480px) {
+
+}
+
+@media only screen and (min-width: 768px) {
+
+
+}
+
+@media only screen and (min-width: 980px) {
+
+
+}
+
