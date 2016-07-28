@@ -27,6 +27,14 @@ h1 {
 /* HEADER */
 
 
+
+/* MAP */
+
+#map {
+	height: 500px;
+}
+
+
 /* FORM */
 
 input[type="checkbox"] {
