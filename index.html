@@ -8,16 +8,46 @@
 	<link rel="stylesheet" href='css/normalize.css'>
 	<link rel="stylesheet" href='css/bootstrap.css'>
 	<link rel="stylesheet" href='css/style.css'>
-	<script async src="/path/to/oauth.js"></script>
 </head>
 
 <body>
-	<div id='my-elem'></div>
-	<div id='map'></div>
+	<header>
+		<h1>date night in san francisco</h1>
+	</header>
+	<main>
+		<section>
+			<h2>map your night</h2>
+			<div id='map'></div>
+		</section>
+		<section>
+			<h3>fill out the form</h3>
+			<div>
+				<form id=”form”>
+					<label for=”#a”>Address:</label>
+					<input id=”a” type=”text” name=”user_name”>
+					<div>
+						<label for="a">Radius:</label>
+						<input type="radio" name="radius" id="a" value="small" />
+						<label for="a">1mi</label>
+						<input type="radio" name="radius" id="b" value="medium" />
+						<label for="b">2mi</label>
+						<input type="radio" name="radius" id="c" value="large" />
+						<label for="c">3mi</label>
+					</div>
+					<input type="submit" name="submit" value=" Submit ">
+				</form>
+
+			</div>
+		</section>
+		<section>
+			<h3>available attractions</h3>
+			<div id='list'></div>
+		</section>
+	</main>
 	<footer>
-		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9dAQG-LxLeEVs8opvx2sAEwOcovMBfyk&v=3&callback=initMap"></script>
 		<script async src="js/knockout.js"></script>
 		<script async defer src="js/app.js"></script>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9dAQG-LxLeEVs8opvx2sAEwOcovMBfyk&v=3&callback=initMap"></script>
 	</footer>
 </body>
 

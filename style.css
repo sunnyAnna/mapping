@@ -1,64 +1,56 @@
 /* GENERAL */
 
 li {
-list-style: none;
+	list-style: none;
 }
-
-
 
 
 /* ALIGNMENT */
 
 
-
-
 /* FONTS */
 
 body {
-font: 18px Verdana, sans-serif;
-line-height: 23px;
+	font: 18px Verdana, sans-serif;
+	line-height: 23px;
 }
 
 h1 {
-letter-spacing: 2px;
+	letter-spacing: 2px;
 	line-height: 40px;
 }
-
-
 
 
 /* HEADER */
 
 
-
-
 /* FORM */
 
+input[type="checkbox"] {
+	-webkit-appearance: checkbox;
+}
 
+input[type="radio"] {
+	-webkit-appearance: radio;
+}
+
+input[type="submit"],
+input[type="button"] {
+	-webkit-appearance: button;
+}
+
+select {
+	-webkit-appearance: textfield;
+}
 
 
 /* LIST */
 
 
-
-
 /* HOME */
 
+@media only screen and (min-width: 480px) {}
 
+@media only screen and (min-width: 768px) {}
 
-
-
-@media only screen and (min-width: 480px) {
-
-}
-
-@media only screen and (min-width: 768px) {
-
-
-}
-
-@media only screen and (min-width: 980px) {
-
-
-}
-
+@media only screen and (min-width: 980px) {}
