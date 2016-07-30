@@ -1,4 +1,4 @@
-if (typeof(module) !== 'undefined' && typeof(exports) !== 'undefined') {
+if (typeof (module) !== 'undefined' && typeof (exports) !== 'undefined') {
 	module.exports = OAuth;
 	var CryptoJS = require("crypto-js");
 }
@@ -8,53 +8,53 @@ if (typeof(module) !== 'undefined' && typeof(exports) !== 'undefined') {
  * @param {Object} opts consumer key and secret
  */
 function OAuth(opts) {
-	if(!(this instanceof OAuth)) {
+	if (!(this instanceof OAuth)) {
 		return new OAuth(opts);
 	}
 
-	if(!opts) {
+	if (!opts) {
 		opts = {};
 	}
 
-	if(!opts.consumer) {
+	if (!opts.consumer) {
 		throw new Error('consumer option is required');
 	}
 
-	this.consumer            = opts.consumer;
-	this.signature_method    = opts.signature_method || 'HMAC-SHA1';
-	this.nonce_length        = opts.nonce_length || 32;
-	this.version             = opts.version || '1.0';
+	this.consumer = opts.consumer;
+	this.signature_method = opts.signature_method || 'HMAC-SHA1';
+	this.nonce_length = opts.nonce_length || 32;
+	this.version = opts.version || '1.0';
 	this.parameter_seperator = opts.parameter_seperator || ', ';
 
-	if(typeof opts.last_ampersand === 'undefined') {
+	if (typeof opts.last_ampersand === 'undefined') {
 		this.last_ampersand = true;
 	} else {
 		this.last_ampersand = opts.last_ampersand;
 	}
 
 	switch (this.signature_method) {
-		case 'HMAC-SHA1':
-			this.hash = function(base_string, key) {
-				return CryptoJS.HmacSHA1(base_string, key).toString(CryptoJS.enc.Base64);
-			};
-			break;
+	case 'HMAC-SHA1':
+		this.hash = function (base_string, key) {
+			return CryptoJS.HmacSHA1(base_string, key).toString(CryptoJS.enc.Base64);
+		};
+		break;
 
-		case 'HMAC-SHA256':
-			this.hash = function(base_string, key) {
-				return CryptoJS.HmacSHA256(base_string, key).toString(CryptoJS.enc.Base64);
-			};
-			break;
+	case 'HMAC-SHA256':
+		this.hash = function (base_string, key) {
+			return CryptoJS.HmacSHA256(base_string, key).toString(CryptoJS.enc.Base64);
+		};
+		break;
 
-		case 'PLAINTEXT':
-			this.hash = function(base_string, key) {
-				return key;
-			};
-			break;
+	case 'PLAINTEXT':
+		this.hash = function (base_string, key) {
+			return key;
+		};
+		break;
 
-		case 'RSA-SHA1':
-			throw new Error('oauth-1.0a does not support this signature method right now. Coming Soon...');
-		default:
-			throw new Error('The OAuth 1.0a protocol defines three signature methods: HMAC-SHA1, RSA-SHA1, and PLAINTEXT only');
+	case 'RSA-SHA1':
+		throw new Error('oauth-1.0a does not support this signature method right now. Coming Soon...');
+	default:
+		throw new Error('The OAuth 1.0a protocol defines three signature methods: HMAC-SHA1, RSA-SHA1, and PLAINTEXT only');
 	}
 }
 
@@ -69,7 +69,14 @@ function OAuth(opts) {
  * @param  {Object} public and secret token
  * @return {Object} OAuth Authorized data
  */
-OAuth.prototype.authorize = function(request, token) {
+OAuth.prototype.authorize = function (request, token) {
+
+	OAuth.prototype.params.oauth_signature = this.getSignature(request, token.secret, OAuth.prototype.params);
+
+	return OAuth.prototype.params.oauth_signature;
+};
+
+OAuth.prototype.params = function (request, token) {
 	var oauth_data = {
 		oauth_consumer_key: this.consumer.public,
 		oauth_nonce: this.getNonce(),
@@ -78,20 +85,19 @@ OAuth.prototype.authorize = function(request, token) {
 		oauth_version: this.version
 	};
 
-	if(!token) {
+	if (!token) {
 		token = {};
 	}
 
-	if(token.public) {
+	if (token.public) {
 		oauth_data.oauth_token = token.public;
 	}
 
-	if(!request.data) {
+	if (!request.data) {
 		request.data = {};
 	}
 
-	oauth_data.oauth_signature = this.getSignature(request, token.secret, oauth_data);
-
+	//oauth_data.oauth_signature = this.getSignature(request, token.secret, oauth_data);
 	return oauth_data;
 };
 
@@ -102,7 +108,7 @@ OAuth.prototype.authorize = function(request, token) {
  * @param  {Object} oauth_data   OAuth data
  * @return {String} Signature
  */
-OAuth.prototype.getSignature = function(request, token_secret, oauth_data) {
+OAuth.prototype.getSignature = function (request, token_secret, oauth_data) {
 	return this.hash(this.getBaseString(request, oauth_data), this.getSigningKey(token_secret));
 };
 
@@ -112,8 +118,10 @@ OAuth.prototype.getSignature = function(request, token_secret, oauth_data) {
  * @param  {Object} OAuth data
  * @return {String} Base String
  */
-OAuth.prototype.getBaseString = function(request, oauth_data) {
-	return request.method.toUpperCase() + '&' + this.percentEncode(this.getBaseUrl(request.url)) + '&' + this.percentEncode(this.getParameterString(request, oauth_data));
+OAuth.prototype.getBaseString = function (request, oauth_data) {
+	var baseStr = request.method.toUpperCase() + '&' + this.percentEncode(this.getBaseUrl(request.url)) + '&' + this.percentEncode(this.getParameterString(request, oauth_data));
+	baseStr = baseStr.replace(/GET&/, "GET\\u0026");
+	return baseStr;
 };
 
 /**
@@ -126,31 +134,31 @@ OAuth.prototype.getBaseString = function(request, oauth_data) {
  * @param  {Object} OAuth data
  * @return {Object} Parameter string data
  */
-OAuth.prototype.getParameterString = function(request, oauth_data) {
-	var base_string_data = this.sortObject(this.percentEncodeData(this.mergeObject(oauth_data, this.mergeObject(request.data, this.deParamUrl(request.url)))));
+OAuth.prototype.getParameterString = function (request, oauth_data) {
+	var base_string_data = this.sortObject(this.percentEncodeData(this.mergeObject(this.mergeObject(request.data, this.deParamUrl(request.url)), oauth_data)));
 
 	var data_str = '';
 
 	//base_string_data to string
-	for(var key in base_string_data) {
+	for (var key in base_string_data) {
 		var value = base_string_data[key];
 		// check if the value is an array
 		// this means that this key has multiple values
-		if (value && Array.isArray(value)){
-		  // sort the array first
-		  value.sort();
+		if (value && Array.isArray(value)) {
+			// sort the array first
+			value.sort();
 
-		  var valString = "";
-		  // serialize all values for this key: e.g. formkey=formvalue1&formkey=formvalue2
-		  value.forEach((function(item, i){
-			valString += key + '=' + item;
-			if (i < value.length){
-			  valString += "&";
-			}
-		  }).bind(this));
-		  data_str += valString;
+			var valString = "";
+			// serialize all values for this key: e.g. formkey=formvalue1&formkey=formvalue2
+			value.forEach((function (item, i) {
+				valString += key + '=' + item;
+				if (i < value.length) {
+					valString += "&";
+				}
+			}).bind(this));
+			data_str += valString;
 		} else {
-		  data_str += key + '=' + value + '&';
+			data_str += key + '=' + value + '&';
 		}
 	}
 
@@ -164,10 +172,10 @@ OAuth.prototype.getParameterString = function(request, oauth_data) {
  * @param  {String} token_secret Secret Token
  * @return {String} Signing Key
  */
-OAuth.prototype.getSigningKey = function(token_secret) {
+OAuth.prototype.getSigningKey = function (token_secret) {
 	token_secret = token_secret || '';
 
-	if(!this.last_ampersand && !token_secret) {
+	if (!this.last_ampersand && !token_secret) {
 		return this.percentEncode(this.consumer.secret);
 	}
 
@@ -179,7 +187,7 @@ OAuth.prototype.getSigningKey = function(token_secret) {
  * @param  {String} url
  * @return {String}
  */
-OAuth.prototype.getBaseUrl = function(url) {
+OAuth.prototype.getBaseUrl = function (url) {
 	return url.split('?')[0];
 };
 
@@ -188,11 +196,11 @@ OAuth.prototype.getBaseUrl = function(url) {
  * @param  {String} string
  * @return {Object}
  */
-OAuth.prototype.deParam = function(string) {
+OAuth.prototype.deParam = function (string) {
 	var arr = string.split('&');
 	var data = {};
 
-	for(var i = 0; i < arr.length; i++) {
+	for (var i = 0; i < arr.length; i++) {
 		var item = arr[i].split('=');
 		data[item[0]] = decodeURIComponent(item[1]);
 	}
@@ -204,7 +212,7 @@ OAuth.prototype.deParam = function(string) {
  * @param  {String} url
  * @return {Object}
  */
-OAuth.prototype.deParamUrl = function(url) {
+OAuth.prototype.deParamUrl = function (url) {
 	var tmp = url.split('?');
 
 	if (tmp.length === 1)
@@ -218,7 +226,7 @@ OAuth.prototype.deParamUrl = function(url) {
  * @param  {String} str
  * @return {String} percent encoded string
  */
-OAuth.prototype.percentEncode = function(str) {
+OAuth.prototype.percentEncode = function (str) {
 	return encodeURIComponent(str)
 		.replace(/\!/g, "%21")
 		.replace(/\*/g, "%2A")
@@ -232,21 +240,21 @@ OAuth.prototype.percentEncode = function(str) {
  * @param  {Object} data
  * @return {Object} percent encoded data
  */
-OAuth.prototype.percentEncodeData = function(data) {
+OAuth.prototype.percentEncodeData = function (data) {
 	var result = {};
 
-	for(var key in data) {
+	for (var key in data) {
 		var value = data[key];
 		// check if the value is an array
-		if (value && Array.isArray(value)){
-		  var newValue = [];
-		  // percentEncode every value
-		  value.forEach((function(val){
-			newValue.push(this.percentEncode(val));
-		  }).bind(this));
-		  value = newValue;
+		if (value && Array.isArray(value)) {
+			var newValue = [];
+			// percentEncode every value
+			value.forEach((function (val) {
+				newValue.push(this.percentEncode(val));
+			}).bind(this));
+			value = newValue;
 		} else {
-		  value = this.percentEncode(value);
+			value = this.percentEncode(value);
 		}
 		result[this.percentEncode(key)] = value;
 	}
@@ -259,12 +267,12 @@ OAuth.prototype.percentEncodeData = function(data) {
  * @param  {Object} oauth_data
  * @return {String} Header data key - value
  */
-OAuth.prototype.toHeader = function(oauth_data) {
+OAuth.prototype.toHeader = function (oauth_data) {
 	oauth_data = this.sortObject(oauth_data);
 
 	var header_value = 'OAuth ';
 
-	for(var key in oauth_data) {
+	for (var key in oauth_data) {
 		if (key.indexOf('oauth_') === -1)
 			continue;
 		header_value += this.percentEncode(key) + '="' + this.percentEncode(oauth_data[key]) + '"' + this.parameter_seperator;
@@ -279,11 +287,11 @@ OAuth.prototype.toHeader = function(oauth_data) {
  * Create a random word characters string with input length
  * @return {String} a random word characters string
  */
-OAuth.prototype.getNonce = function() {
+OAuth.prototype.getNonce = function () {
 	var word_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 	var result = '';
 
-	for(var i = 0; i < this.nonce_length; i++) {
+	for (var i = 0; i < this.nonce_length; i++) {
 		result += word_characters[parseInt(Math.random() * word_characters.length, 10)];
 	}
 
@@ -294,8 +302,8 @@ OAuth.prototype.getNonce = function() {
  * Get Current Unix TimeStamp
  * @return {Int} current unix timestamp
  */
-OAuth.prototype.getTimeStamp = function() {
-	return parseInt(new Date().getTime()/1000, 10);
+OAuth.prototype.getTimeStamp = function () {
+	return parseInt(new Date().getTime() / 1000, 10);
 };
 
 ////////////////////// HELPER FUNCTIONS //////////////////////
@@ -306,9 +314,9 @@ OAuth.prototype.getTimeStamp = function() {
  * @param  {Object} obj2
  * @return {Object}
  */
-OAuth.prototype.mergeObject = function(obj1, obj2) {
+OAuth.prototype.mergeObject = function (obj1, obj2) {
 	var merged_obj = obj1;
-	for(var key in obj2) {
+	for (var key in obj2) {
 		merged_obj[key] = obj2[key];
 	}
 	return merged_obj;
@@ -319,13 +327,13 @@ OAuth.prototype.mergeObject = function(obj1, obj2) {
  * @param  {Object} data
  * @return {Object} sorted object
  */
-OAuth.prototype.sortObject = function(data) {
+OAuth.prototype.sortObject = function (data) {
 	var keys = Object.keys(data);
 	var result = {};
 
 	keys.sort();
 
-	for(var i = 0; i < keys.length; i++) {
+	for (var i = 0; i < keys.length; i++) {
 		var key = keys[i];
 		result[key] = data[key];
 	}

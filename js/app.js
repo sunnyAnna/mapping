@@ -156,10 +156,11 @@ var ViewModel = {
 		return model.updateMarker(attr);
 	},
 	getAttractions: function () {
+		console.log(yelpUrl);
 		$.ajax({
-			url: request_data.url,
+			url: yelpUrl,
 			method: request_data.method,
-			data: oauth.authorize(request_data, token),
+			//data: oauth.authorize(request_data, token),
 			dataType: 'jsonp',
 			jsonpCallback: 'cb',
 			cache: true
@@ -235,8 +236,6 @@ function start() {
 
 
 
-
-
 var oauth = OAuth({
 	consumer: {
 		public: 'UxD0Z5qqLISGMYhh-RhlLw',
@@ -256,10 +255,14 @@ var request_data = {
 	data: {
 		location: 'San Francisco, California USA',
 		term: 'food',
-		radius_filter: 1600,
-		offset: 31,
 		limit: 5,
-		cll: 37.7749 + ',' + -122.4194,
-		callback: 'cb'
+		radius_filter: 1600,
+		cll: 37.7749 + ',' + -122.4194
 	}
 }
+
+
+var normalizedParams = oauth.params(request_data, token);
+var signature = oauth.authorize(request_data, token);
+var yelpUrl = request_data.url + '?' + oauth.getParameterString(request_data, normalizedParams) + '&oauth_signature=' + signature;
+//yelpUrl = yelpUrl.replace(/[?]/,'\\u0026');
