@@ -77,11 +77,11 @@ var model = {
 		mile: 1609.34,
 		radius: 5
 	},
-	updateMarker: function (action, val) {
+	updateMarker: function (action) {
 		switch (action) {
 		case 'position':
 			marker.setOptions({
-				position: val
+				position: map.center
 			});
 			break;
 		}
@@ -94,6 +94,10 @@ var model = {
 				radius: val
 			});
 			break;
+		case 'position':
+			circle.setOptions({
+				center: map.center
+			});
 		}
 	}
 }
@@ -146,16 +150,31 @@ var ViewModel = {
 		model.addresses.appendChild(li);
 	},
 	updateCircle: function (attr) {
-		console.log(attr);
 		return model.updateCircle(attr);
-		//val = (val == 1) ? mile : (val == 2) ? mile * 2 : (val == 3) ? mile * 3 : (val == 4) ? mile * 4 : mile * 5;
-		//circle.radius = val;
 	},
-	updateMarker: function (attr, val) {
-		return model.updateMarker(attr, val);
+	updateMarker: function (attr) {
+		return model.updateMarker(attr);
+	},
+	getAttractions: function () {
+		$.ajax({
+			url: request_data.url,
+			method: request_data.method,
+			data: oauth.authorize(request_data, token),
+			dataType: 'jsonp',
+			jsonpCallback: 'cb',
+			cache: true
+		}).done(function (data) {
+			console.log(data);
+		}).fail(function (err) {
+			console.log(err);
+			console.log('error');
+		});
 	}
 }
 
+function cb() {
+	console.log('hi');
+}
 
 var MapView = {
 	init: function () {
@@ -178,7 +197,6 @@ var MapView = {
 }
 
 
-
 var geocoderView = {
 	geocodeAddress: function () {
 		var address = model.address.value;
@@ -188,14 +206,15 @@ var geocoderView = {
 			geocoder.geocode({
 				address: address
 			}, function (results, status) {
-				console.log(results);
 				if (status == google.maps.GeocoderStatus.OK && results.length > 1) {
 					model.message.textContent = 'Did you mean:';
 					results.forEach(ViewModel.displayResults);
 				} else if (status == google.maps.GeocoderStatus.OK) {
 					geocoderView.resetAddressInfo();
 					map.setCenter(results[0].geometry.location);
-					ViewModel.updateMarker('position', map.center);
+					ViewModel.updateMarker('position');
+					ViewModel.updateCircle('position');
+					ViewModel.getAttractions();
 				} else {
 					model.message.textContent = 'We could not find that location - try entering a more' + ' specific place.';
 				}
@@ -208,9 +227,39 @@ var geocoderView = {
 	}
 }
 
+
 function start() {
 	ViewModel.init();
 }
 
 
-//OAuth.initialize('UxD0Z5qqLISGMYhh-RhlLw');
+
+
+
+
+var oauth = OAuth({
+	consumer: {
+		public: 'UxD0Z5qqLISGMYhh-RhlLw',
+		secret: '5FC-vntH4oIJQEC9uZgvK_nAEw0'
+	},
+	signature_method: 'HMAC-SHA1'
+});
+
+var token = {
+	public: 'zxzc_uob_G0rkyMK1Ie_cS5Dh0WGJ4T-',
+	secret: '_-VUR0VVdK7R-tUCONGdmMI0n8c'
+}
+
+var request_data = {
+	url: 'https://api.yelp.com/v2/search',
+	method: 'GET',
+	data: {
+		location: 'San Francisco, California USA',
+		term: 'food',
+		radius_filter: 1600,
+		offset: 31,
+		limit: 5,
+		cll: 37.7749 + ',' + -122.4194,
+		callback: 'cb'
+	}
+}
