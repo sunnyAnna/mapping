@@ -156,14 +156,20 @@ var ViewModel = {
 		return model.updateMarker(attr);
 	},
 	getAttractions: function () {
+		var signature = oauth.authorize(request_data, token);
+		var yelpUrl = request_data.url + '?' + a + '&oauth_signature=' + signature;
 		console.log(yelpUrl);
 		$.ajax({
-			url: yelpUrl,
-			method: request_data.method,
-			//data: oauth.authorize(request_data, token),
+			//url: request_data.url,
 			dataType: 'jsonp',
 			jsonpCallback: 'cb',
-			cache: true
+			data: {
+				oauth_signature: oauth.authorize(request_data, token)
+			},
+			url: request_data.url + '?' + a,
+			//data: signature,
+			cache: true,
+			type: request_data.method
 		}).done(function (data) {
 			console.log(data);
 		}).fail(function (err) {
@@ -173,9 +179,6 @@ var ViewModel = {
 	}
 }
 
-function cb() {
-	console.log('hi');
-}
 
 var MapView = {
 	init: function () {
@@ -235,6 +238,12 @@ function start() {
 
 
 
+function cb() {
+	console.log('hi');
+}
+
+
+
 
 var oauth = OAuth({
 	consumer: {
@@ -262,7 +271,8 @@ var request_data = {
 }
 
 
-var normalizedParams = oauth.params(request_data, token);
-var signature = oauth.authorize(request_data, token);
-var yelpUrl = request_data.url + '?' + oauth.getParameterString(request_data, normalizedParams) + '&oauth_signature=' + signature;
+//var normalizedParams = oauth.params(request_data, token);
+//var signature = oauth.authorize(request_data, token);
+
+//var yelpUrl = request_data.url + '?' + a + '&oauth_signature=' + oauth.authorize(request_data, token);
 //yelpUrl = yelpUrl.replace(/[?]/,'\\u0026');

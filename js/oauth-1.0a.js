@@ -69,14 +69,8 @@ function OAuth(opts) {
  * @param  {Object} public and secret token
  * @return {Object} OAuth Authorized data
  */
+
 OAuth.prototype.authorize = function (request, token) {
-
-	OAuth.prototype.params.oauth_signature = this.getSignature(request, token.secret, OAuth.prototype.params);
-
-	return OAuth.prototype.params.oauth_signature;
-};
-
-OAuth.prototype.params = function (request, token) {
 	var oauth_data = {
 		oauth_consumer_key: this.consumer.public,
 		oauth_nonce: this.getNonce(),
@@ -97,8 +91,8 @@ OAuth.prototype.params = function (request, token) {
 		request.data = {};
 	}
 
-	//oauth_data.oauth_signature = this.getSignature(request, token.secret, oauth_data);
-	return oauth_data;
+	oauth_data.oauth_signature = this.getSignature(request, token.secret, oauth_data);
+	return oauth_data.oauth_signature;
 };
 
 /**
@@ -118,9 +112,12 @@ OAuth.prototype.getSignature = function (request, token_secret, oauth_data) {
  * @param  {Object} OAuth data
  * @return {String} Base String
  */
+var a;
 OAuth.prototype.getBaseString = function (request, oauth_data) {
-	var baseStr = request.method.toUpperCase() + '&' + this.percentEncode(this.getBaseUrl(request.url)) + '&' + this.percentEncode(this.getParameterString(request, oauth_data));
-	baseStr = baseStr.replace(/GET&/, "GET\\u0026");
+	a = this.getParameterString(request, oauth_data);
+	var baseStr = request.method.toUpperCase() + '&' + this.percentEncode(this.getBaseUrl(request.url)) + '&' + this.percentEncode(a);
+	//baseStr = baseStr.replace(/GET&/, "GET\\u0026").replace(/search&/,"search\\u0026");
+	console.log('base: ' + baseStr);
 	return baseStr;
 };
 
@@ -135,8 +132,7 @@ OAuth.prototype.getBaseString = function (request, oauth_data) {
  * @return {Object} Parameter string data
  */
 OAuth.prototype.getParameterString = function (request, oauth_data) {
-	var base_string_data = this.sortObject(this.percentEncodeData(this.mergeObject(this.mergeObject(request.data, this.deParamUrl(request.url)), oauth_data)));
-
+	var base_string_data = this.sortObject(this.percentEncodeData(this.mergeObject(oauth_data, this.mergeObject(request.data, this.deParamUrl(request.url)))));
 	var data_str = '';
 
 	//base_string_data to string
@@ -247,6 +243,7 @@ OAuth.prototype.percentEncodeData = function (data) {
 		var value = data[key];
 		// check if the value is an array
 		if (value && Array.isArray(value)) {
+			value.sort();
 			var newValue = [];
 			// percentEncode every value
 			value.forEach((function (val) {
@@ -258,7 +255,6 @@ OAuth.prototype.percentEncodeData = function (data) {
 		}
 		result[this.percentEncode(key)] = value;
 	}
-
 	return result;
 };
 
@@ -277,7 +273,6 @@ OAuth.prototype.toHeader = function (oauth_data) {
 			continue;
 		header_value += this.percentEncode(key) + '="' + this.percentEncode(oauth_data[key]) + '"' + this.parameter_seperator;
 	}
-
 	return {
 		Authorization: header_value.substr(0, header_value.length - this.parameter_seperator.length) //cut the last chars
 	};
