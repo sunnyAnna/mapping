@@ -103,7 +103,7 @@ OAuth.prototype.authorize = function (request, token) {
  * @return {String} Signature
  */
 OAuth.prototype.getSignature = function (request, token_secret, oauth_data) {
-	return this.hash(this.getBaseString(request, oauth_data), this.getSigningKey(token_secret));
+return	 this.hash(this.getBaseString(request, oauth_data), this.getSigningKey(token_secret));
 };
 
 /**
@@ -116,8 +116,6 @@ var a;
 OAuth.prototype.getBaseString = function (request, oauth_data) {
 	a = this.getParameterString(request, oauth_data);
 	var baseStr = request.method.toUpperCase() + '&' + this.percentEncode(this.getBaseUrl(request.url)) + '&' + this.percentEncode(a);
-	//baseStr = baseStr.replace(/GET&/, "GET\\u0026").replace(/search&/,"search\\u0026");
-	console.log('base: ' + baseStr);
 	return baseStr;
 };
 

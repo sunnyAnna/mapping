@@ -103,11 +103,48 @@ var model = {
 }
 
 
+var Yelp = function (callback) {
+	this.cb = callback;
+}
+
+Yelp.prototype.init = function () {
+	var request_data = {
+		url: 'https://api.yelp.com/v2/search',
+		method: 'GET',
+		data: {
+			cll: 37.7749 + ',' + -122.4194,
+			limit: 5,
+			location: 'San Francisco, California USA',
+			radius_filter: 1600,
+			term: 'food',
+			callback: this.cb
+		}
+	}
+	var signature = oauth.authorize(request_data, token);
+	var yelpUrl = request_data.url + '?' + a + "&oauth_signature=" + signature;
+	console.log(a);
+	console.log(signature);
+	$.ajax({
+		type: request_data.method,
+		url: yelpUrl,
+		dataType: 'jsonp',
+		jsonp: 'callback',
+		cache: true
+	}).done(function (data) {
+		console.log(data);
+	}).fail(function (err) {
+		console.log(err);
+		console.log('error');
+	});
+}
+
+
 var ViewModel = {
 	init: function () {
 		model.init();
 		MapView.init();
 		ViewModel.addEventListeners();
+		yelp = new Yelp('ViewModel.cb');
 	},
 	createMarker: function () {
 		return model.mapData.newMarker();
@@ -155,27 +192,11 @@ var ViewModel = {
 	updateMarker: function (attr) {
 		return model.updateMarker(attr);
 	},
+	cb: function () {
+		console.log('hi');
+	},
 	getAttractions: function () {
-		var signature = oauth.authorize(request_data, token);
-		var yelpUrl = request_data.url + '?' + a + '&oauth_signature=' + signature;
-		console.log(yelpUrl);
-		$.ajax({
-			//url: request_data.url,
-			dataType: 'jsonp',
-			jsonpCallback: 'cb',
-			data: {
-				oauth_signature: oauth.authorize(request_data, token)
-			},
-			url: request_data.url + '?' + a,
-			//data: signature,
-			cache: true,
-			type: request_data.method
-		}).done(function (data) {
-			console.log(data);
-		}).fail(function (err) {
-			console.log(err);
-			console.log('error');
-		});
+		return yelp.init();
 	}
 }
 
@@ -197,7 +218,7 @@ var MapView = {
 		ViewModel.createInfoWindow();
 		ViewModel.createCircle();
 		ViewModel.addEventListeners();
-	},
+	}
 }
 
 
@@ -238,12 +259,6 @@ function start() {
 
 
 
-function cb() {
-	console.log('hi');
-}
-
-
-
 
 var oauth = OAuth({
 	consumer: {
@@ -254,21 +269,22 @@ var oauth = OAuth({
 });
 
 var token = {
-	public: 'zxzc_uob_G0rkyMK1Ie_cS5Dh0WGJ4T-',
-	secret: '_-VUR0VVdK7R-tUCONGdmMI0n8c'
-}
-
-var request_data = {
-	url: 'https://api.yelp.com/v2/search',
-	method: 'GET',
-	data: {
-		location: 'San Francisco, California USA',
-		term: 'food',
-		limit: 5,
-		radius_filter: 1600,
-		cll: 37.7749 + ',' + -122.4194
+		public: 'zxzc_uob_G0rkyMK1Ie_cS5Dh0WGJ4T-',
+		secret: '_-VUR0VVdK7R-tUCONGdmMI0n8c'
 	}
-}
+	/*
+	var request_data = {
+		url: 'https://api.yelp.com/v2/search',
+		method: 'GET',
+		data: {
+			cll: 37.7749 + ',' + -122.4194,
+			limit: 5,
+			location: 'San Francisco, California USA',
+			radius_filter: 1600,
+			term: 'food',
+			callback: this.callback
+		}
+	}*/
 
 
 //var normalizedParams = oauth.params(request_data, token);
