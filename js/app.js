@@ -111,10 +111,9 @@ var meetup = {
 			client_id: "v7k7eb2btu206qupdl7tch34di",
 			authorization: "https://secure.meetup.com/oauth2/authorize",
 			redirect_uri: "https://sunnyanna.github.io/mapping/",
-			response_type: "token",
-			callback: meetup.cb
+			response_type: "token"
 		});
-		var url = "https://api.meetup.com/2/open_events";
+		var url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
 		jso.ajax({
 			url: url,
 			dataType: 'json',
@@ -127,7 +126,7 @@ var meetup = {
 				console.log(err);
 			}
 		});
-		jso.callback(url, jso.callback, jso.providerID);
+		jso.callback();
 	},
 	cb: function () {
 		console.log('callback!');

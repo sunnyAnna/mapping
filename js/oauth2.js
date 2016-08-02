@@ -987,10 +987,10 @@
 
 			// If a url is provided
 			if (url) {
-				// utils.log('Hah, I got the url and it ' + url);
+				//utils.log('Hah, I got the url and it ' + url);
 				if (url.indexOf('#') === -1) return;
 				h = url.substring(url.indexOf('#'));
-				// utils.log('Hah, I got the hash and it is ' +  h);
+				//utils.log('Hah, I got the hash and it is ' +  h);
 			}
 
 			/*
