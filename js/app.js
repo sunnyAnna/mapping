@@ -111,21 +111,26 @@ var meetup = {
 			client_id: "v7k7eb2btu206qupdl7tch34di",
 			authorization: "https://secure.meetup.com/oauth2/authorize",
 			redirect_uri: "https://sunnyanna.github.io/mapping/",
-			response_type: "token"
+			response_type: "token",
+			callback: meetup.cb
 		});
+		var url = "https://api.meetup.com/2/open_events";
 		jso.ajax({
-			url: "https://www.googleapis.com/oauth2/v1/userinfo",
+			url: url,
 			dataType: 'json',
 			success: function (data) {
 				console.log("Success response (meetup):");
 				console.log(data);
 			},
-			failure: function(err){
+			failure: function (err) {
 				console.log("Error response (meetup):");
 				console.log(err);
 			}
 		});
-		//jso.callback();
+		jso.callback(url, jso.callback, jso.providerID);
+	},
+	cb: function () {
+		console.log('callback!');
 	},
 	getData: function () {
 
