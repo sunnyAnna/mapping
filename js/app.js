@@ -193,7 +193,7 @@ var ViewModel = {
 		return model.updateMarker(attr);
 	},
 	getAttractions: function () {
-		return mtup.init();
+		return meetup.init();
 	}
 }
 
