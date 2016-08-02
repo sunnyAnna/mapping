@@ -116,9 +116,9 @@ var meetup = {
 			//redirect_uri: "https://sunnyanna.github.io/mapping/",
 			response_type: "token"
 		});
-		//jso.callback();
-		var url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
+		var url = window.location.href;
 		jso.callback(url, meetup.cb, jso.providerID);
+		url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
 		jso.ajax({
 			url: url,
 			dataType: 'jsonp',
