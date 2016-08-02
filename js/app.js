@@ -126,7 +126,7 @@ var meetup = {
 				console.log(err);
 			}
 		});
-		jso.callback();
+		jso.callback(url, meetup.cb, jso.providerID);
 	},
 	cb: function () {
 		console.log('callback!');
