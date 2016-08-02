@@ -1,3 +1,8 @@
+var OAuth;
+require(['require', 'node_modules/@zalando/oauth2-client-js/dist/oauth2-client.js'], function (require) {
+	OAuth = require('node_modules/@zalando/oauth2-client-js/dist/oauth2-client.js');
+});
+
 var map, marker, infowindow, circle, geocoder;
 
 var model = {
@@ -103,26 +108,29 @@ var model = {
 }
 
 
-var meetup = {
+
+var mtup = {
 	init: function () {
-		JSO.enablejQuery($);
-		var jso = new JSO({
-			providerID: "meetup",
-			client_id: "6b5t68srrh7o4hnp2uhptdu9bi",
-			//client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
-			redirect_uri: "http://127.0.0.1:59198/neighborhood-map/index.html",
-			//client_id: "v7k7eb2btu206qupdl7tch34di",
-			authorization: "https://secure.meetup.com/oauth2/authorize",
-			//redirect_uri: "https://sunnyanna.github.io/mapping/",
-			response_type: "token"
+		var meetup = new OAuth.Provider({
+			id: 'meetup',
+			authorization_url: 'https://secure.meetup.com/oauth2/authorize'
 		});
-		//jso.callback();
-		var url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
-		jso.callback(url, meetup.cb, jso.providerID);
-		jso.ajax({
+
+		var request = new OAuth.Request({
+			client_id: 'at0i8rfnm3p5nqphdjg9acn0hu',
+			redirect_uri: 'http://127.0.0.1:59198/neighborhood-map/index.html'
+		});
+
+		var uri = meetup.requestToken(request);
+		meetup.remember(request);
+		window.location.href = uri;
+		var response = meetup.parse(window.location.href);
+		//console.log(meetup.storage.localStorage);
+		/*var url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
+		$.ajax({
 			url: url,
 			dataType: 'jsonp',
-			jsonCallback: meetup.cb,
+			jsonCallback: mtup.cb,
 			success: function (data) {
 				console.log("Success response (meetup):");
 				console.log(data);
@@ -131,7 +139,7 @@ var meetup = {
 				console.log("Error response (meetup):");
 				console.log(err);
 			}
-		});
+		});*/
 	},
 	cb: function () {
 		console.log('callback!');
@@ -195,7 +203,7 @@ var ViewModel = {
 		return model.updateMarker(attr);
 	},
 	getAttractions: function () {
-		return meetup.init();
+		return mtup.init();
 	}
 }
 
