@@ -103,17 +103,15 @@ var model = {
 }
 
 
+
 var meetup = {
 	init: function () {
 		JSO.enablejQuery($);
 		var jso = new JSO({
 			providerID: "meetup",
-			client_id: "6b5t68srrh7o4hnp2uhptdu9bi",
-			//client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
-			redirect_uri: "http://127.0.0.1:59198/neighborhood-map/index.html",
-			//client_id: "v7k7eb2btu206qupdl7tch34di",
+			client_id: "v7k7eb2btu206qupdl7tch34di",
 			authorization: "https://secure.meetup.com/oauth2/authorize",
-			//redirect_uri: "https://sunnyanna.github.io/mapping/",
+			redirect_uri: "https://sunnyanna.github.io/mapping/",
 			response_type: "token"
 		});
 		var url = window.location.href;
@@ -195,7 +193,7 @@ var ViewModel = {
 		return model.updateMarker(attr);
 	},
 	getAttractions: function () {
-		return meetup.init();
+		return mtup.init();
 	}
 }
 
