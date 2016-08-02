@@ -116,7 +116,7 @@ var meetup = {
 		var url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
 		jso.ajax({
 			url: url,
-			dataType: 'json',
+			dataType: 'jsonp',
 			success: function (data) {
 				console.log("Success response (meetup):");
 				console.log(data);
