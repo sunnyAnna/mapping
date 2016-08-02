@@ -108,15 +108,21 @@ var meetup = {
 		JSO.enablejQuery($);
 		var jso = new JSO({
 			providerID: "meetup",
-			client_id: "v7k7eb2btu206qupdl7tch34di",
+			client_id: "6b5t68srrh7o4hnp2uhptdu9bi",
+			//client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
+			redirect_uri: "http://127.0.0.1:59198/neighborhood-map/index.html",
+			//client_id: "v7k7eb2btu206qupdl7tch34di",
 			authorization: "https://secure.meetup.com/oauth2/authorize",
-			redirect_uri: "https://sunnyanna.github.io/mapping/",
+			//redirect_uri: "https://sunnyanna.github.io/mapping/",
 			response_type: "token"
 		});
+		//jso.callback();
 		var url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
+		jso.callback(url, meetup.cb, jso.providerID);
 		jso.ajax({
 			url: url,
 			dataType: 'jsonp',
+			jsonCallback: meetup.cb,
 			success: function (data) {
 				console.log("Success response (meetup):");
 				console.log(data);
@@ -126,7 +132,6 @@ var meetup = {
 				console.log(err);
 			}
 		});
-		jso.callback(url, meetup.cb, jso.providerID);
 	},
 	cb: function () {
 		console.log('callback!');
