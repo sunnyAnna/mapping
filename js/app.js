@@ -112,13 +112,20 @@ var meetup = {
 			client_id: "v7k7eb2btu206qupdl7tch34di",
 			authorization: "https://secure.meetup.com/oauth2/authorize",
 			redirect_uri: "https://sunnyanna.github.io/mapping/",
+			scopes: { request: ["https://api.meetup.com/"]}
 			response_type: "token"
 		});
 		var url = window.location.href;
 		jso.callback(url, meetup.cb, jso.providerID);
-		url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
+		url = "https://api.meetup.com/2/open_events";
 		jso.ajax({
 			url: url,
+			oauth: {
+            			scopes: {
+                			request: ["https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20"],
+        				require: ["https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20"]
+            			}
+        		},
 			dataType: 'jsonp',
 			jsonCallback: meetup.cb,
 			success: function (data) {
