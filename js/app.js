@@ -1,4 +1,4 @@
-var map, marker, infowindow, circle, geocoder;
+var map, marker, infowindow, circle, geocoder, jso;
 
 var model = {
 	init: function () {
@@ -7,6 +7,8 @@ var model = {
 		this.addresses = document.getElementById('addresses');
 		this.submit = document.getElementById('submit');
 		this.range = document.getElementById('range');
+		this.start = document.getElementById('start');
+		this.ask = document.getElementById('ask');
 	},
 	mapData: {
 		newMarker: function () {
@@ -103,22 +105,26 @@ var model = {
 }
 
 
-
 var meetup = {
-	init: function () {
-		JSO.enablejQuery($);
-		var jso = new JSO({
-			providerID: "meetup",
-			client_id: "v7k7eb2btu206qupdl7tch34di",
-			authorization: "https://secure.meetup.com/oauth2/authorize",
-			redirect_uri: "https://sunnyanna.github.io/mapping/",
-			response_type: "token"
-		});
-		var url = window.location.href;
-		jso.callback(url, meetup.cb, jso.providerID);
-		url = "https://api.meetup.com/2/open_events?&sign=true&photo-host=public&zip=94939&page=20";
+	data: {
+		url: ko.computed(function () {
+			return "https://api.meetup.com/2/open_events?sign=true&photo-host=public&page=20&zip=" + this.zip + "&radius=" + this.radius + "";
+		}, this),
+		radius: ko.observable(25),
+		zip: ko.observable(94939),
+		newJso: function () {
+			jso = new JSO({
+				providerID: "meetup",
+				client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
+				authorization: "https://secure.meetup.com/oauth2/authorize",
+				redirect_uri: "http://127.0.0.1:59198/neighborhood-map/index.html",
+				response_type: "token"
+			});
+		}
+	},
+	APIcall: function () {
 		jso.ajax({
-			url: url,
+			url: meetup.data.url,
 			dataType: 'jsonp',
 			jsonCallback: meetup.cb,
 			success: function (data) {
@@ -131,8 +137,25 @@ var meetup = {
 			}
 		});
 	},
+	tokenRequest: function () {
+		jso.getToken(function (token) {
+			meetup.APIcall();
+		});
+	},
+	tokenSave: function () {
+		jso.callback(window.location.href, meetup.APIcall, jso.providerID);
+	},
+	init: function () {
+		JSO.enablejQuery($);
+		meetup.data.newJso();
+		if (!window.location.hash) {
+			meetup.tokenRequest();
+		}
+		meetup.tokenSave();
+		meetup.APIcall();
+	},
 	cb: function () {
-		console.log('callback!');
+		console.log('done');
 	},
 	getData: function () {
 
@@ -142,6 +165,7 @@ var meetup = {
 
 var ViewModel = {
 	init: function () {
+		meetup.init();
 		model.init();
 		MapView.init();
 		ViewModel.addEventListeners();
@@ -171,7 +195,14 @@ var ViewModel = {
 		marker.onclick = function (e) {
 			e.preventDefault();
 			infowindow.open(map, marker);
-		}
+			meetup.init();
+		};
+		model.start.onclick = function () {
+			meetup.init();
+		};
+		model.ask.onclick = function () {
+			meetup.process();
+		};
 	},
 	changeAddress: function (x) {
 		model.address.value = x.textContent;
@@ -198,6 +229,18 @@ var ViewModel = {
 }
 
 
+
+var MeetupView = {
+	eventName: ko.observable(''),
+	eventUrl: ko.observable(''),
+	groupName: ko.observable(''),
+	groupPhoto: ko.observable(''),
+	venue: ko.observable(''),
+	yesRsvpCount: ko.observable('')
+
+}
+
+
 var MapView = {
 	init: function () {
 		map = new google.maps.Map(document.getElementById('map'), {
@@ -214,7 +257,7 @@ var MapView = {
 		ViewModel.createMarker();
 		ViewModel.createInfoWindow();
 		ViewModel.createCircle();
-		ViewModel.addEventListeners();
+		//ViewModel.addEventListeners();
 	}
 }
 
@@ -249,7 +292,7 @@ var geocoderView = {
 	}
 }
 
-
-function start() {
+function generator() {
+	//localStorage.clear();
 	ViewModel.init();
-}
+};

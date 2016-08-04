@@ -1142,7 +1142,6 @@
 			} else {
 				this._authorize(callback, opts);
 			}
-
 		};
 
 		JSO.prototype.checkToken = function (opts) {
@@ -1291,9 +1290,9 @@
 
 			return this.getToken(function (token) {
 				utils.log("Ready. Got an token, and ready to perform an AJAX call", token);
-
+				settings.url += ((settings.url.indexOf("?") === -1) ? '?' : '&') + "access_token=" + encodeURIComponent(token["access_token"]);
+				console.log(settings.url);
 				if (that.config.get('presenttoken', null) === 'qs') {
-					// settings.url += ((h.indexOf("?") === -1) ? '?' : '&') + "access_token=" + encodeURIComponent(token["access_token"]);
 					if (!settings.data) settings.data = {};
 					settings.data.access_token = token.access_token;
 				} else {
