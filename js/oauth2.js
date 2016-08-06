@@ -1290,6 +1290,7 @@
 
 			return this.getToken(function (token) {
 				utils.log("Ready. Got an token, and ready to perform an AJAX call", token);
+				console.log(settings.url);
 				settings.url += ((settings.url.indexOf("?") === -1) ? '?' : '&') + "access_token=" + encodeURIComponent(token["access_token"]);
 				console.log(settings.url);
 				if (that.config.get('presenttoken', null) === 'qs') {

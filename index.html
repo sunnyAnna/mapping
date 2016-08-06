@@ -22,58 +22,36 @@
 		<section>
 			<h3 id="ask">fill out the form</h3>
 			<div>
-				<form id=”form”>
+				<form id=”form” data-bind="submit: findAddress">
 					<label for=”#address”>Address:</label>
-					<input id='address' type=”text” name=”address” value=''>
+					<input id='address' type=”text” name=”address” data-bind="textInput: address">
 					<div>
 						<label for="#range">Radius:</label>
-						<input type="range" name="radius" id="range" value='2' min='1' max='5' step='1' />
+						<input type="range" name="radius" id="range" min='1' max='5' step='1' data-bind="value: radius, click: updateCircle" />
 					</div>
-					<input type="submit" name="submit" value=" Submit " id='submit'>
+					<button type="submit" id='submit'>Submit</button>
 				</form>
 				<div>
-					<p id='message'></p>
-					<ul id='addresses'></ul>
+					<p data-bind="text: info"></p>
+					<ul data-bind='foreach: addressList'>
+						<li data-bind='text: addr, click: $parent.setAddress'></li>
+					</ul>
 				</div>
 			</div>
 		</section>
 		<section>
-			<h3 id='start'>available attractions</h3>
-			<div>
-				<nav>
-					<ul>
-						<li class="tab">
-							<a href=""><span>food</span></a>
-						</li>
-						<li class="tab">
-							<a href=""><span>events</span></a>
-						</li>
-						<li class="tab">
-							<a href=""><span>activities</span></a>
-						</li>
-					</ul>
-				</nav>
-				<ul class="content">
-					<li>
-						<div class='category-name'></div>
-						<ul class="venue-listings">
-							<li>
-								<div class="venue-photo"></div>
-								<div class="venue-name"></div>
-								<div class="venue-rating"></div>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
+			<h3>available attractions</h3>
+			<ul data-bind='foreach: meetupList'>
+				<li data-bind='text: title'></li>
+			</ul>
 		</section>
 	</main>
 	<footer>
-		<script async src="js/oauth2.js"></script>
-		<script async src="js/knockout.js"></script>
 		<script async src=" https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js "></script>
-		<script async src="js/app.js"></script>
 		<script async src='https://maps.googleapis.com/maps/api/js?key=AIzaSyB9dAQG-LxLeEVs8opvx2sAEwOcovMBfyk&v=3&callback=generator'></script>
+		<script src="js/knockout.js"></script>
+		<script src="js/oauth2.js"></script>
+		<script src="js/app.js"></script>
 	</footer>
 </body>
 

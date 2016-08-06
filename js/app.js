@@ -1,15 +1,7 @@
 var map, marker, infowindow, circle, geocoder, jso;
 
 var model = {
-	init: function () {
-		this.address = document.getElementById('address');
-		this.message = document.getElementById('message');
-		this.addresses = document.getElementById('addresses');
-		this.submit = document.getElementById('submit');
-		this.range = document.getElementById('range');
-		this.start = document.getElementById('start');
-		this.ask = document.getElementById('ask');
-	},
+	init: function () {},
 	mapData: {
 		newMarker: function () {
 			marker = new google.maps.Marker({
@@ -28,7 +20,7 @@ var model = {
 			circle = new google.maps.Circle({
 				center: map.center,
 				map: map,
-				radius: model.range.value * 1609.34,
+				radius: ViewModel.radius() * 1609.34,
 				fillColor: '#fff',
 				fillOpacity: 0.5
 			});
@@ -74,57 +66,109 @@ var model = {
 					]
 				}
 			]
+	}
+}
+
+
+var ViewModel = {
+	radius: ko.observable(2),
+	address: ko.observable(''),
+	zip: 94939,
+	info: ko.observable(''),
+	item: function (x) {
+		this.addr = ko.observable(x);
 	},
-	formData: {
-		mile: 1609.34,
-		radius: 5
+	addressList: ko.observableArray([]),
+	meetupList: ko.observableArray([]),
+	meetupGroup: function (data) {
+		this.eventName = title;
+		this.eventUrl = url;
+		this.groupName = name;
+		this.groupPhoto = photo;
+		this.venue = venue;
+		this.yesRsvpCount = rsvp;
 	},
-	updateMarker: function (action) {
-		switch (action) {
-		case 'position':
+	init: function () {
+		model.init();
+		MapView.init();
+		//meetup.init();
+		ViewModel.addEventListeners();
+	},
+	createMarker: function () {
+		return model.mapData.newMarker();
+	},
+	createCircle: function () {
+		return model.mapData.newCircle();
+	},
+	createInfoWindow: function () {
+		return model.mapData.newInfoWindow();
+	},
+	findAddress: function () {
+		return geocoderView.geocodeAddress();
+	},
+	findZipCode: function (arr) {
+		arr.forEach(function (x) {
+			if (x.types[0] === "postal_code") {
+				return ViewModel.zip = x.short_name;
+			}
+		});
+	},
+	addEventListeners: function () {
+		marker.onclick = function (e) {
+			e.preventDefault();
+			infowindow.open(map, marker);
+			meetup.init();
+		}
+	},
+	makeList: function (x) {
+		ViewModel.addressList.push(new ViewModel.item(x.formatted_address));
+	},
+	setAddress: function (y) {
+		ViewModel.address(y.addr());
+		ViewModel.findAddress();
+	},
+	clearList: function () {
+		ViewModel.info('');
+		ViewModel.addressList([]);
+	},
+	updatePosition: function (elem) {
+		switch (elem) {
+		case 'marker':
 			marker.setOptions({
 				position: map.center
 			});
 			break;
-		}
-	},
-	updateCircle: function (action) {
-		switch (action) {
-		case 'radius':
-			var val = model.range.value * 1609.34;
-			circle.setOptions({
-				radius: val
-			});
-			break;
-		case 'position':
+		case 'circle':
 			circle.setOptions({
 				center: map.center
 			});
 		}
+	},
+	updateCircle: function () {
+		circle.setOptions({
+			radius: ViewModel.radius() * 1609.34
+		});
+	},
+	getAttractions: function () {
+		return meetup.init();
 	}
 }
 
 
 var meetup = {
-	data: {
-		url: ko.computed(function () {
-			return "https://api.meetup.com/2/open_events?sign=true&photo-host=public&page=20&zip=" + this.zip + "&radius=" + this.radius + "";
-		}, this),
-		radius: ko.observable(25),
-		zip: ko.observable(94939),
-		newJso: function () {
-			jso = new JSO({
-				providerID: "meetup",
-				client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
-				authorization: "https://secure.meetup.com/oauth2/authorize",
-				redirect_uri: "http://127.0.0.1:59198/neighborhood-map/index.html",
-				response_type: "token"
-			});
-		}
+	newJso: function () {
+		jso = new JSO({
+			providerID: "meetup",
+			client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
+			authorization: "https://secure.meetup.com/oauth2/authorize",
+			redirect_uri: "http://127.0.0.1:59198/neighborhood-map/index.html",
+			response_type: "token"
+		});
 	},
 	APIcall: function () {
+		var url = "https://api.meetup.com/2/open_events?sign=true&photo-host=public&page=20&zip=" + ViewModel.zip + "&radius=" + ViewModel.radius();
 		jso.ajax({
-			url: meetup.data.url,
+			url: url,
 			dataType: 'jsonp',
 			jsonCallback: meetup.cb,
 			success: function (data) {
@@ -147,7 +191,7 @@ var meetup = {
 	},
 	init: function () {
 		JSO.enablejQuery($);
-		meetup.data.newJso();
+		meetup.newJso();
 		if (!window.location.hash) {
 			meetup.tokenRequest();
 		}
@@ -162,83 +206,6 @@ var meetup = {
 	}
 }
 
-
-var ViewModel = {
-	init: function () {
-		meetup.init();
-		model.init();
-		MapView.init();
-		ViewModel.addEventListeners();
-	},
-	createMarker: function () {
-		return model.mapData.newMarker();
-	},
-	createCircle: function (num) {
-		return model.mapData.newCircle();
-	},
-	createInfoWindow: function () {
-		return model.mapData.newInfoWindow();
-	},
-	findAddress: function () {
-		return geocoderView.geocodeAddress();
-	},
-	addEventListeners: function () {
-		model.submit.onclick = function (e) {
-			e.preventDefault();
-			ViewModel.findAddress();
-		};
-		model.range.onclick = function (e) {
-			e.preventDefault();
-			var attr = 'radius';
-			ViewModel.updateCircle(attr);
-		};
-		marker.onclick = function (e) {
-			e.preventDefault();
-			infowindow.open(map, marker);
-			meetup.init();
-		};
-		model.start.onclick = function () {
-			meetup.init();
-		};
-		model.ask.onclick = function () {
-			meetup.process();
-		};
-	},
-	changeAddress: function (x) {
-		model.address.value = x.textContent;
-		ViewModel.findAddress();
-	},
-	displayResults: function (x) {
-		var li = document.createElement('li');
-		li.onclick = function (e) {
-			e.preventDefault();
-			ViewModel.changeAddress(li);
-		}
-		li.textContent = x.formatted_address;
-		model.addresses.appendChild(li);
-	},
-	updateCircle: function (attr) {
-		return model.updateCircle(attr);
-	},
-	updateMarker: function (attr) {
-		return model.updateMarker(attr);
-	},
-	getAttractions: function () {
-		return meetup.init();
-	}
-}
-
-
-
-var MeetupView = {
-	eventName: ko.observable(''),
-	eventUrl: ko.observable(''),
-	groupName: ko.observable(''),
-	groupPhoto: ko.observable(''),
-	venue: ko.observable(''),
-	yesRsvpCount: ko.observable('')
-
-}
 
 
 var MapView = {
@@ -264,33 +231,33 @@ var MapView = {
 
 var geocoderView = {
 	geocodeAddress: function () {
-		var address = model.address.value;
+		var address = ViewModel.address();
+		ViewModel.clearList();
 		if (address == '') {
-			model.message.textContent = 'You must enter an area, or address.';
+			ViewModel.info('You must enter an address.');
 		} else {
 			geocoder.geocode({
 				address: address
 			}, function (results, status) {
 				if (status == google.maps.GeocoderStatus.OK && results.length > 1) {
-					model.message.textContent = 'Did you mean:';
-					results.forEach(ViewModel.displayResults);
+					ViewModel.info('Did you mean:');
+					results.forEach(ViewModel.makeList);
 				} else if (status == google.maps.GeocoderStatus.OK) {
-					geocoderView.resetAddressInfo();
 					map.setCenter(results[0].geometry.location);
-					ViewModel.updateMarker('position');
-					ViewModel.updateCircle('position');
+					ViewModel.findZipCode(results[0].address_components);
+					ViewModel.updatePosition('marker');
+					ViewModel.updatePosition('circle');
+					ViewModel.updateCircle();
 					ViewModel.getAttractions();
 				} else {
-					model.message.textContent = 'We could not find that location - try entering a more' + ' specific place.';
+					ViewModel.info('We could not find that location - try entering a more specific place.');
 				}
 			});
 		}
-	},
-	resetAddressInfo: function () {
-		model.message.textContent = '';
-		model.addresses.innerHTML = '';
 	}
 }
+
+ko.applyBindings(ViewModel);
 
 function generator() {
 	//localStorage.clear();
