@@ -42,8 +42,15 @@
 		<section>
 			<h3>available attractions</h3>
 			<ul data-bind='foreach: meetupList'>
-				<li data-bind='text: title'></li>
+				<li data-bind='text: groupName, click: $parent.showMoreInfo'></li>
 			</ul>
+			<p>meetup details:</p>
+			<div data-bind='foreach: meetupInfo'>
+				<p data-bind='text: eventName'>
+					<a data-bind='text: url'></a>
+				</p>
+				<img src="" alt="meetup event" data-bind='attr: {src: imgSrc}'>
+			</div>
 		</section>
 	</main>
 	<footer>
