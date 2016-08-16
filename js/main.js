@@ -23,7 +23,6 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 
 		var ViewModel = function () {
 			var self = this;
-			this.z = {};
 			this.form = new Form();
 			this.meetup = new Meetup();
 			this.geo = new Map();
@@ -44,6 +43,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 
 			this.showMoreInfo = function (x) {
 				self.meetup.info(x);
+				console.log(x);
 			};
 
 			this.makeAddrList = function (x) {
@@ -52,19 +52,14 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 
 			this.makeMtpList = function (data) {
 				var results = data.results;
-				results.forEach(function (y) {
-					var lat = y.venue ? y.venue.lat : y.group.group_lat;
-					var lon = y.venue ? y.venue.lon : y.group.group_lon;
-					var pos = {
-						lat: lat,
-						lng: lon
-					};
-					y.marker = new gmaps.Marker({
-						position: pos,
-						map: self.geo.map
-					});
-					return new self.meetup.group(y);
+				results.forEach(function (x) {
+					var group = new self.meetup.group(x);
+					self.addMapInfo(group);
 				});
+			};
+
+			this.addMapInfo = function (x) {
+				x.marker = self.geo.makeMarker(x.venue, self.geo.map, '', x.eventName());
 			};
 
 			this.setAddress = function (y) {

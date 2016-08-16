@@ -5,17 +5,15 @@ define(['oauth2', 'jquery', 'knockout'], function (JSO, $, ko) {
 		this.list = ko.observableArray([]);
 		this.info = ko.observable('');
 		this.group = function (data) {
-			this.marker = data.marker;
 			this.eventName = ko.observable(data.name);
 			this.url = ko.observable(data.event_url);
 			this.groupName = ko.observable(data.group.name);
 			this.imgSrc = '';
+			this.lat = data.venue ? data.venue.lat : data.group.group_lat;
+			this.lon = data.venue ? data.venue.lon : data.group.group_lon;
 			this.venue = {
-				street: data.address_1,
-				city: data.city,
-				state: data.state,
-				country: data.country,
-				zip: data.zip
+				lat: this.lat,
+				lng: this.lon
 			};
 			self.list.push(this);
 		};
@@ -26,7 +24,7 @@ define(['oauth2', 'jquery', 'knockout'], function (JSO, $, ko) {
 		providerID: "meetup",
 		client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
 		authorization: "https://secure.meetup.com/oauth2/authorize",
-		redirect_uri: "http://127.0.0.1:60535/neighborhood-map/index.html",
+		redirect_uri: "http://127.0.0.1:55531/neighborhood-map/index.html",
 		response_type: "token"
 	});
 
