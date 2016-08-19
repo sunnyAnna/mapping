@@ -86,9 +86,8 @@ define(['gmaps'], function (gmaps) {
 		this.mainMarker = self.makeMarker(self.map.center, self.map, 'you are here', 'assets/tweet.png');
 		this.activeMarker;
 		this.toggleMarker = function (marker) {
-			if (self.activeMarker && marker !== self.activeMarker) {
-				self.activeMarker.active = false;
-				self.toggleIcon(self.activeMarker);
+			if (marker !== self.activeMarker) {
+				self.activeMarker_deactivate();
 			}
 			if (marker.active === false) {
 				marker.active = true;
@@ -102,6 +101,15 @@ define(['gmaps'], function (gmaps) {
 			}
 			self.activeMarker = marker;
 		};
+
+		this.activeMarker_deactivate = function () {
+			if (self.activeMarker) {
+				self.activeMarker.active = false;
+				self.toggleIcon(self.activeMarker);
+				self.infoWindow.close();
+			}
+		};
+
 		this.toggleIcon = function (marker) {
 			if (marker !== self.mainMarker) {
 				var icon = marker.active === false ? self.staticIcon : self.activeIcon;

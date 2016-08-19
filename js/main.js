@@ -34,12 +34,12 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			this.updateMeetupMap = function () {
 				var radius = self.form.radius();
 				self.geo.updateCircleRadius(radius);
-				self.meetup.informUser('Upcoming meetups within ' + radius +
-					'mi from this address:');
+				self.geo.activeMarker_deactivate();
 				var list = self.meetup.list();
 				if (list) {
 					list.forEach(function (group) {
-						self.geo.updateVisibility(group, group.distance(), radius);
+						group.visibility(self.geo.updateVisibility(group, group.distance(), radius));
+						group.details(false);
 					});
 				}
 			};
@@ -61,9 +61,10 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 
 
 			this.clear = function () {
-				self.form.alertUser(''); // clear form alert
-				self.form.list([]); // clear form list
-				self.meetup.list([]); // clear meetup list
+				self.callMade(false);
+				self.form.alertUser('');
+				self.form.list([]);
+				self.meetup.list([]);
 			};
 
 			this.getAttractions = function (center) {
@@ -72,14 +73,10 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 
 			this.makeMtpList = function (data) {
 				if (data) {
-					var radius = self.form.radius();
-					self.meetup.informUser('Upcoming meetups within ' + radius +
-						'mi from this address:');
-					var results = data.results;
-					results.forEach(function (result) {
+					data.forEach(function (result) {
 						var group = new self.meetup.group(result);
 						group.marker = self.geo.makeMarker(group.venue, self.geo.map, group.eventName());
-						self.geo.updateVisibility(group, group.distance(), radius);
+						group.visibility(self.geo.updateVisibility(group, group.distance(), self.form.radius()));
 						return group;
 					});
 				}
@@ -114,12 +111,9 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 				return new self.form.item(x, x.formatted_address);
 			};
 
-
+			this.setDemo = (function () {
+				self.makeMtpList(self.meetup.initialData);
+			})();
 		};
 		ko.applyBindings(new ViewModel());
 	});
-
-
-
-
-//localStorage.clear();

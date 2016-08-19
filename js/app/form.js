@@ -2,7 +2,7 @@ define(['knockout'], function (ko) {
 
 	var Form = function () {
 		var self = this;
-		this.radius = ko.observable(2);
+		this.radius = ko.observable(1);
 		this.address = ko.observable();
 		this.alert = ko.observable();
 		this.list = ko.observableArray([]);

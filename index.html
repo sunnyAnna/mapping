@@ -40,18 +40,18 @@
 			</div>
 		</section>
 		<section>
-			<h3 data-bind="visible: callMade, text: meetup.list().length > 0 ? ('We found ' + meetup.list().length + ' upcoming meetups within 5mi of this address.') : ('No upcoming meetups within 5mi of this address.')"></h3>
+			<h3 data-bind="visible: callMade, html: meetup.list().length > 0 ? meetup.totalCount() : meetup.noFound()"></h3>
 			<div data-bind="visible: meetup.list().length > 0">
 			<h4 data-bind="text: 'Here are the meetups within ' + $root.form.radius() + 'mi: '"></h4>
 			<ul data-bind='foreach: meetup.list'>
-				<li data-bind='visible: distance() < $root.form.radius()'>
+				<li data-bind='visible: visibility() === true'>
 					<p data-bind='text: groupName, click: $parent.toggleVisibility'></p>
-					<div data-bind='if: details() === true'>
+					<div data-bind='visible: details() === true'>
 						<h4 data-bind='text: $root.meetup.info'></h4>
 						<a data-bind='attr: {href: url}'><p data-bind='text: eventName'></p></a>
-						<div data-bind="if: rsvp">
-							<p data-bind='text: rsvp'></p>
-						</div>
+						<p data-bind='text: rsvp'></p>
+						<p data-bind='text: date'></p>
+						<p data-bind='text: hour'></p>
 					</div>
 				</li>
 			</ul>
