@@ -26,34 +26,35 @@
 					<label for=”#address”>Address:</label>
 					<input id='address' type=”text” name=”address” data-bind="textInput: form.address">
 					<div>
-						<label for="#range">Radius:</label>
-						<input type="range" name="radius" id="range" min='1' max='5' step='1' data-bind="value: form.radius, click: updateCircleRadius" />
-					</div>
+				<label for="#range" data-bind="text: 'Radius:'"></label>
+				<input type="range" name="radius" min='1' max='5' step='1' data-bind="value: form.radius, click: updateMeetupMap" />
+			</div>
 					<button type="submit" id='submit'>Submit</button>
 				</form>
 				<div>
-					<p data-bind="text: form.info"></p>
+					<p data-bind="text: form.alert"></p>
 					<ul data-bind='foreach: form.list'>
 						<li data-bind='text: addr, click: $parent.setAddress'></li>
 					</ul>
 				</div>
 			</div>
 		</section>
-		<section id='mtp'>
-			<!-- ko if:meetup.list -->
-			<h3 >upcoming meetups nearby:</h3>
-			<!-- /ko -->
+		<section>
+			<h3 data-bind="visible: callMade, text: meetup.list().length > 0 ? ('We found ' + meetup.list().length + ' upcoming meetups within 5mi of this address.') : ('No upcoming meetups within 5mi of this address.')"></h3>
+			<div data-bind="visible: meetup.list().length > 0">
+			<h4 data-bind="text: 'Here are the meetups within ' + $root.form.radius() + 'mi: '"></h4>
 			<ul data-bind='foreach: meetup.list'>
-				<li data-bind='text: groupName, click: $parent.showMoreInfo'></li>
+				<li data-bind='visible: distance() < $root.form.radius()'>
+					<p data-bind='text: groupName, click: $parent.toggleVisibility'></p>
+					<div data-bind='if: details() === true'>
+						<h4 data-bind='text: $root.meetup.info'></h4>
+						<a data-bind='attr: {href: url}'><p data-bind='text: eventName'></p></a>
+						<div data-bind="if: rsvp">
+							<p data-bind='text: rsvp'></p>
+						</div>
+					</div>
+				</li>
 			</ul>
-			<!-- ko if:meetup.info -->
-			<h3 >meetup details:</h3>
-			<!-- /ko -->
-			<div data-bind='foreach: meetup.info'>
-				<p data-bind='text: eventName'>
-					<a data-bind='text: url'></a>
-				</p>
-				<img src="" alt="meetup event" data-bind='attr: {src: imgSrc}'>
 			</div>
 		</section>
 	</main>

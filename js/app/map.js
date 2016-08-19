@@ -1,58 +1,7 @@
 define(['gmaps'], function (gmaps) {
-
+	'use strict';
 	var Map = function () {
 		var self = this;
-		this.map = new gmaps.Map(document.getElementById('map'), {
-			center: {
-				lat: 37.7749,
-				lng: -122.4194
-			},
-			zoom: 12
-		});
-		this.makeMarker = function (pos, map, ic, title) {
-			var icon = ic || {
-				path: google.maps.SymbolPath.CIRCLE,
-				scale: 5,
-				fillColor: 'black',
-				strokeColor: 'gold',
-				strokeWeight: 10
-			};
-			var marker = new gmaps.Marker({
-				position: pos,
-				map: map,
-				animation: google.maps.Animation.DROP,
-				icon: icon,
-				title: title
-			});
-			marker.addListener('click', function () {
-				self.updateInfoWindow(this);
-				self.infoWindow.open(self.map, this);
-			});
-			return marker;
-		};
-		this.marker = self.makeMarker(self.map.center, self.map, 'assets/tweet.png', 'you are here');
-		/*this.mtpMarker = function (mtp, map) {
-			var marker = new gmaps.Marker({
-				position: mtp.venue,
-				map: map,
-				icon: {
-					path: google.maps.SymbolPath.CIRCLE,
-					scale: 5,
-					fillColor: 'black',
-					strokeColor: 'gold',
-					strokeWeight: 10
-				}
-			});
-			return marker;
-		};*/
-		this.infoWindow = new gmaps.InfoWindow();
-		this.circle = new gmaps.Circle({
-			center: self.map.center,
-			map: self.map,
-			radius: 1609.34,
-			fillColor: '#fff',
-			fillOpacity: 0.5
-		});
 		this.stylesArray = [
 			{
 				"elementType": "labels",
@@ -94,18 +43,114 @@ define(['gmaps'], function (gmaps) {
 					]
 				}
 			];
-		this.markerList = [];
-		this.updateInfoWindow = function (x) {
+		this.map = new gmaps.Map(document.getElementById('map'), {
+			center: {
+				lat: 37.7749,
+				lng: -122.4194
+			},
+			zoom: 12,
+			styles: self.stylesArray
+		});
+		this.circle = new gmaps.Circle({
+			center: self.map.center,
+			map: self.map,
+			radius: 1609.34,
+			fillColor: '#fff',
+			fillOpacity: 0.5
+		});
+		this.Icon = function (scale, strokeColor, strokeWeight, name) {
+			this.path = google.maps.SymbolPath.CIRCLE;
+			this.scale = scale;
+			this.strokeColor = strokeColor;
+			this.strokeWeight = strokeWeight;
+		};
+		this.staticIcon = new self.Icon(5, 'gold', 7);
+		this.activeIcon = new self.Icon(7, 'red', 10);
+
+		this.makeMarker = function (pos, map, title, ic) {
+			var icon = ic || self.staticIcon,
+				marker = new gmaps.Marker({
+					position: pos,
+					map: map,
+					animation: google.maps.Animation.DROP,
+					icon: icon,
+					title: title
+				});
+			marker.active = false;
+			marker.addListener('click', function () {
+				self.toggleMarker(this);
+			});
+			return marker;
+		};
+
+		this.mainMarker = self.makeMarker(self.map.center, self.map, 'you are here', 'assets/tweet.png');
+		this.activeMarker;
+		this.toggleMarker = function (marker) {
+			if (self.activeMarker && marker !== self.activeMarker) {
+				self.activeMarker.active = false;
+				self.toggleIcon(self.activeMarker);
+			}
+			if (marker.active === false) {
+				marker.active = true;
+				self.toggleIcon(marker);
+				self.updateInfoWindow(marker);
+				self.infoWindow.open(self.map, marker);
+			} else {
+				marker.active = false;
+				self.toggleIcon(marker);
+				self.infoWindow.close();
+			}
+			self.activeMarker = marker;
+		};
+		this.toggleIcon = function (marker) {
+			if (marker !== self.mainMarker) {
+				var icon = marker.active === false ? self.staticIcon : self.activeIcon;
+				marker.setIcon(icon);
+			}
+		};
+
+		this.infoWindow = new gmaps.InfoWindow();
+		this.infoWindow.addListener('closeclick', function () {
+			self.toggleMarker(self.activeMarker);
+		});
+		this.updateInfoWindow = function (marker) {
 			self.infoWindow.setOptions({
-				content: x.title,
-				position: x.position
+				content: marker.title,
+				position: marker.position
 			});
 		};
 
-		/*map.setOptions({
-			styles: Map.stylesArray
-		});*/
+		this.updatePosition = function (elem) {
+			switch (elem) {
+			case 'marker':
+				self.mainMarker.setPosition(self.map.center);
+				break;
+			case 'circle':
+				self.circle.setCenter(self.map.center);
+				break;
+			}
+		};
 
+		this.updateCircleRadius = function (radius) {
+			self.circle.setRadius(radius * 1609.34);
+		};
+
+		this.updateVisibility = function (elem, distance, border) {
+			if (distance < border) {
+				elem.marker.setVisible(true);
+				return true;
+			} else {
+				elem.marker.setVisible(false);
+				return false;
+			}
+		};
+
+		this.updateMap = function (map, radius) {
+			self.map = map;
+			self.updatePosition('marker');
+			self.updatePosition('circle');
+			self.updateCircleRadius(radius);
+		};
 	};
 	return Map;
 });
