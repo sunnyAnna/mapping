@@ -14,13 +14,13 @@ li {
 /* FONTS */
 
 body {
-	font: 18px Verdana, sans-serif;
-	line-height: 23px;
+	font: 16px Verdana, sans-serif;
+	line-height: 2.3em;
+	padding: 20px;
 }
 
 h1 {
-	letter-spacing: 2px;
-	line-height: 40px;
+	letter-spacing: 1px;
 }
 
 
@@ -37,12 +37,8 @@ h1 {
 
 /* FORM */
 
-input[type="checkbox"] {
-	-webkit-appearance: checkbox;
-}
-
-input[type="radio"] {
-	-webkit-appearance: radio;
+input {
+	background-color: rgba(0,0,0,0.1);
 }
 
 input[type="submit"],

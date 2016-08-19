@@ -83,7 +83,7 @@ define(['gmaps'], function (gmaps) {
 			return marker;
 		};
 
-		this.mainMarker = self.makeMarker(self.map.center, self.map, 'you are here', 'assets/tweet.png');
+		this.mainMarker = self.makeMarker(self.map.center, self.map, 'you are here', '\uf001');
 		this.activeMarker;
 		this.toggleMarker = function (marker) {
 			if (marker !== self.activeMarker) {
