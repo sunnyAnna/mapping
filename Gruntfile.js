@@ -1,5 +1,4 @@
 module.exports = function (grunt) {
-
 	grunt.initConfig({
 		uglify: {
 			my_target: {
@@ -21,7 +20,6 @@ module.exports = function (grunt) {
 			}
 		}
 	});
-
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-cssnano');
 	grunt.registerTask('default', ['cssnano', 'uglify']);
