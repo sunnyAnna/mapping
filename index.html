@@ -43,7 +43,9 @@
 		<section class="pad">
 			<div class="meetup-info" data-bind="visible: callMade">
 				<div data-bind="html: meetup.list().length > 0 ? meetup.userAlerts.totalCount : meetup.userAlerts.noFound"></div>
-				<div data-bind="visible: meetup.list().length > 0, html: meetup.userAlerts.listing"></div>
+				<!-- ko if: meetup.list().length > 0 -->
+				<div data-bind="html: meetup.userAlerts.listing"></div>
+				<!-- /ko -->
 			</div>
 			<ul class="meetups" data-bind='foreach: meetup.list'>
 				<li data-bind='visible: visibility() === true'>

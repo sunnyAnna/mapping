@@ -180,7 +180,7 @@ define(['gmaps'], function(gmaps) {
 			this.strokeWeight = strokeWeight;
 		};
 		this.iconTypes = {
-			static: new self.Icon(5, '#BAB803', 7),
+			passive: new self.Icon(5, '#BAB803', 7),
 			active: new self.Icon(7, '#E0393E', 10),
 			main: new self.Icon(2, '#000', 2, self.homeImg)
 		};
@@ -197,7 +197,7 @@ define(['gmaps'], function(gmaps) {
 				position: pos,
 				map: map,
 				animation: google.maps.Animation.DROP,
-				icon: ic || self.iconTypes.static,
+				icon: ic || self.iconTypes.passive,
 				title: title
 			});
 			marker.active = false;
@@ -244,7 +244,7 @@ define(['gmaps'], function(gmaps) {
 		 * @description Removes the marker from the active state object
 		 */
 		this.activeMarker_deactivate = function() {
-			if (self.activeMarker) {
+			if (self.activeMarker.icon) {
 				self.activeMarker.active = false;
 				self.toggleIcon(self.activeMarker);
 				self.infoWindow.close();
@@ -255,7 +255,7 @@ define(['gmaps'], function(gmaps) {
 		 */
 		this.toggleIcon = function(marker) {
 			if (marker !== self.mainMarker) {
-				var icon = marker.active === false ? self.iconTypes.static : self.iconTypes.active;
+				var icon = marker.active === false ? self.iconTypes.passive : self.iconTypes.active;
 				marker.setIcon(icon);
 			}
 		};
