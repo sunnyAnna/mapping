@@ -139,7 +139,7 @@ define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
 	 */
 	var jso = new JSO({
 		providerID: "meetup",
-		client_id: "at0i8rfnm3p5nqphdjg9acn0hu",
+		client_id: "v7k7eb2btu206qupdl7tch34di",
 		authorization: "https://secure.meetup.com/oauth2/authorize",
 		redirect_uri: "https://sunnyanna.github.io/mapping/",
 		response_type: "token"
