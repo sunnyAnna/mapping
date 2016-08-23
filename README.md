@@ -34,15 +34,18 @@ File and module loader:
 JS task runner:
 - [Grunt](http://gruntjs.com)
 
-SVG icon for main marker: [Bryn Taylor](https://dribbble.com/shots/1934932-77-Essential-Icons-Free-Download)
+Creative:
+- Fonts: [Google Fonts](https://fonts.google.com)
+- Icon: [Bryn Taylor](https://dribbble.com/shots/1934932-77-Essential-Icons-Free-Download)
 
 ### GRUNT
 
-Grunt plugins were used for minimizing normalize.css file as well as files in js/lib folder (JS files in app folder have not been minimized to preserve readability).
+Grunt plugins were used for adding Google Maps API call functionality within RequireJS, minimizing normalize.css file as well as files in js/lib folder (JS files in app folder have not been minimized to preserve readability).
 
 Instructions for adding _node_modules_ and running Grunt for this project:
 
 Download the plugins:
+- `npm install amd-googlemaps-loader`
 - `npm install grunt-cssnano --save-dev`
 - `npm install grunt-contrib-uglify --save-dev`
 
