@@ -50,6 +50,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 						group.details(false);
 					});
 				}
+				return true;
 			};
 			/**
 			 * @description Toggles visibility of the meetup group and its marker.

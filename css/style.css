@@ -26,7 +26,7 @@ main,
 }
 
 .map {
-	height: 30%;
+	height: 40%;
 	width: 100%;
 }
 
@@ -39,10 +39,10 @@ body {
 }
 
 h1 {
-	font: 1.9em/1.2em 'Montserrat', sans-serif;
-	letter-spacing: 1px;
-	word-spacing: 15px;
-	padding: 15px;
+	font: 1.1em/1.3em 'Montserrat', sans-serif;
+	word-spacing: 3px;
+	padding: 10px;
+	text-align: center;
 }
 
 h2 {
@@ -108,20 +108,6 @@ h1,
 .meetups li::before {
 	/* yellow */
 	color: #bab803;
-}
-
-
-/* HEADER */
-
-header {
-	margin-bottom: 20px;
-}
-
-
-/* MAP */
-
-.gm-style .gm-style-iw {
-	font-size: 18px;
 }
 
 
@@ -234,9 +220,8 @@ input,
 #submit {
 	height: 1.9em;
 	border: 2px solid white;
-	line-height: 1.9em;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	padding: 1px;
 }
 
@@ -285,6 +270,17 @@ input,
 /* HOME */
 
 @media only screen and (min-width: 768px) {
+	header {
+		margin-bottom: 20px;
+	}
+	h1 {
+		font: 1.9em/1.2em 'Montserrat', sans-serif;
+		word-spacing: 15px;
+		letter-spacing: 1px;
+	}
+	.gm-style .gm-style-iw {
+		font-size: 1em;
+	}
 	.pad {
 		max-width: 900px;
 	}
