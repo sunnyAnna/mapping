@@ -5,57 +5,60 @@
 	<meta charset='utf-8'>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 	<title>Neighborhood Map</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Caveat%7CMontserrat">
 	<link rel="stylesheet" href='css/normalize.css'>
-	<link rel="stylesheet" href='css/bootstrap.css'>
 	<link rel="stylesheet" href='css/style.css'>
 </head>
 
 <body>
 	<header>
-		<h1>meetups in the neighborhood</h1>
+		<h1>meetups in your neighborhood</h1>
 	</header>
 	<main>
 		<section>
-			<h2>map of the neighborhood</h2>
+			<h2>map of the area</h2>
 			<div id='map'></div>
 		</section>
-		<section>
+		<section class="pad">
 			<h3>enter your address</h3>
-			<div>
-				<form data-bind="submit: findAddress">
-					<label for=”#address”>Address:</label>
-					<input id='address' type=”text” name=”address” data-bind="textInput: form.address">
-					<div>
-				<label for="#range" data-bind="text: 'Radius:'"></label>
-				<input type="range" name="radius" min='1' max='5' step='1' data-bind="value: form.radius, click: updateMeetupMap" />
-			</div>
-					<button type="submit" id='submit'>Submit</button>
-				</form>
-				<div>
-					<p data-bind="text: form.alert"></p>
-					<ul data-bind='foreach: form.list'>
-						<li data-bind='text: addr, click: $parent.setAddress'></li>
-					</ul>
+			<form data-bind="submit: findAddress">
+				<div class="form-elem">
+					<label for="address">Address:</label>
+					<input id="address" name=”address” data-bind="textInput: form.address, click: clearField">
 				</div>
+				<div class="form-elem">
+					<label for="range">Radius:</label>
+					<output for="range" data-bind="text: form.radius() + ' miles'"></output>
+					<input id="range" type="range" name="radius" min='1' max='5' step='1' data-bind="value: form.radius, click: updateMeetupMap" />
+				</div>
+				<button class="form-elem" type="submit" id='submit'>Submit</button>
+			</form>
+			<div class="addresses">
+				<p data-bind="text: form.alert"></p>
+				<ul data-bind='foreach: form.list'>
+					<li data-bind='text: addr, click: $parent.setAddress'></li>
+				</ul>
 			</div>
 		</section>
-		<section>
-			<h3 data-bind="visible: callMade, html: meetup.list().length > 0 ? meetup.totalCount() : meetup.noFound()"></h3>
-			<div data-bind="visible: meetup.list().length > 0">
-			<h4 data-bind="text: 'Here are the meetups within ' + $root.form.radius() + 'mi: '"></h4>
-			<ul data-bind='foreach: meetup.list'>
+		<section class="pad">
+			<div class="meetup-info" data-bind="visible: callMade">
+				<div data-bind="html: meetup.list().length > 0 ? meetup.userAlerts.totalCount : meetup.userAlerts.noFound"></div>
+				<div data-bind="html: meetup.userAlerts.listing"></div>
+			</div>
+			<ul class="meetups" data-bind='foreach: meetup.list'>
 				<li data-bind='visible: visibility() === true'>
 					<p data-bind='text: groupName, click: $parent.toggleVisibility'></p>
-					<div data-bind='visible: details() === true'>
+					<div class="details" data-bind='visible: details() === true'>
 						<h4 data-bind='text: $root.meetup.info'></h4>
-						<a data-bind='attr: {href: url}'><p data-bind='text: eventName'></p></a>
-						<p data-bind='text: rsvp'></p>
-						<p data-bind='text: date'></p>
-						<p data-bind='text: hour'></p>
+						<a data-bind='attr: {href: url}'>
+							<p data-bind='text: eventName'></p>
+						</a>
+						<p data-bind='html: date'></p>
+						<p data-bind='html: hour'></p>
+						<p data-bind='html: rsvp'></p>
 					</div>
 				</li>
 			</ul>
-			</div>
 		</section>
 	</main>
 	<footer>

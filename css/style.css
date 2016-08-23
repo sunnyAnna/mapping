@@ -1,59 +1,173 @@
 /* GENERAL */
 
+ul {
+	padding: 0;
+}
 li {
 	list-style: none;
 }
-
-
 /* ALIGNMENT */
 
-.inline {
-	display: inline;
+.pad {
+	max-width: 400px;
+	margin: 0 auto;
+	padding: 0 15px;
 }
-
 /* FONTS */
 
 body {
-	font: 16px Verdana, sans-serif;
-	line-height: 2.3em;
-	padding: 20px;
+	font: 16px/1.2em 'Verdana', sans-serif;
+	padding-bottom: 30px;
 }
-
 h1 {
+	font: 1.9em/1.2em 'Montserrat', sans-serif;
 	letter-spacing: 1px;
+	word-spacing: 15px;
+	padding: 15px;
 }
+h2 {
+	margin: 0 10px 3px;
+}
+h2,
+label,
+.addresses p {
+	font: 1.6em/1em 'Caveat', cursive;
+	font-style: italic;
+}
+h3 {
+	margin-left: -1000px;
+	position: absolute;
+}
+.details h4 {
+	text-transform: uppercase;
+}
+span {
+	text-decoration: underline;
+}
+a,
+.meetup-count,
+.fontsy {
+	text-decoration: none;
+}
+.meetup-count {
+	padding: 5px 10px;
+	border-radius: 50% 0;
+	font-size: 1.2em;
+	line-height: 1.8em;
+}
+.fontsy {
+	font: 1.2em/1em 'Caveat', cursive;
+	font-style: italic;
+	padding-right: 15px;
+}
+/* COLORS */
 
+header,
+.meetup-count,
+#submit:hover {
+	/* red */
 
+	background: #e0393e;
+}
+h1,
+.meetup-count {
+	/* white */
+
+	color: #fff;
+}
+.addresses li::before,
+.meetups li::before {
+	/* yellow */
+
+	color: #bab803;
+}
 /* HEADER */
 
-
-
+header {
+	margin-bottom: 20px;
+}
 /* MAP */
 
 #map {
 	height: 500px;
+	margin-bottom: 15px;
 }
-
-
+.gm-style .gm-style-iw {
+	font-size: 18px;
+}
 /* FORM */
 
-input {
-	background-color: rgba(0,0,0,0.1);
+.form-elem {
+	display: inline-block;
+	vertical-align: baseline;
+	width: 100%;
+	margin: 0 0 25px 0;
 }
+label {
+	margin-right: 15px;
+}
+input {
+	/* gray */
 
+	background-color: rgba(0, 0, 0, 0.1);
+	display: block;
+	width: 100%;
+	margin-top: 10px;
+}
 input[type="submit"],
 input[type="button"] {
 	-webkit-appearance: button;
 }
+#submit {
+	/* yellow */
 
+	background: #bab803;
+	margin-top: 10px;
+}
+/* ADDRESS LIST */
 
-/* LIST */
+.addresses li,
+.meetups li {
+	margin-bottom: 20px;
+}
+.addresses li::before,
+.meetups li::before {
+	width: 20px;
+	height: 20px;
+	position: absolute;
+}
+.addresses li::before {
+	content: '✔';
+	margin-left: -25px;
+}
+/* MEETUP LIST */
 
+.addresses li,
+.meetups li > p {
+	margin-left: 30px;
+}
+.meetups li::before {
+	content: '⭑';
+	line-height: 1em;
+	margin-left: 3px;
+}
+.details {
+	/* light yellow */
 
+	background: #dbd690;
+	padding: 1px 15px;
+}
 /* HOME */
 
-@media only screen and (min-width: 480px) {}
-
-@media only screen and (min-width: 768px) {}
-
-@media only screen and (min-width: 980px) {}
+@media only screen and (min-width: 768px) {
+	.pad {
+		max-width: 900px;
+	}
+	.form-elem {
+		width: calc(33.3% - 20px);
+		margin-right: 20px;
+	}
+	button#submit {
+		margin-right: 0;
+	}
+}
