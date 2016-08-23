@@ -19,13 +19,13 @@ requirejs.config({
 });
 
 requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocoder'],
-	function (Meetup, Form, Map, ko, gmaps, Geocoder) {
+	function(Meetup, Form, Map, ko, gmaps, Geocoder) {
 		/**
 		 * @description Creates WiewModel
 		 * @constructor
 		 * @returns {object}
 		 */
-		var ViewModel = function () {
+		var ViewModel = function() {
 			var self = this;
 			this.meetup = new Meetup();
 			this.meetup.init();
@@ -37,7 +37,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			/**
 			 * @description Changes visibility of the meetup groups on the map and the list.
 			 */
-			this.updateMeetupMap = function () {
+			this.updateMeetupMap = function() {
 				var radius = self.form.radius(),
 					list = self.meetup.list();
 				self.meetup.radius(radius);
@@ -45,7 +45,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 				self.geo.activeMarker_deactivate();
 				self.meetup.visibleMeetups(false);
 				if (list) {
-					list.forEach(function (group) {
+					list.forEach(function(group) {
 						self.setVisibility(group);
 						group.details(false);
 					});
@@ -55,7 +55,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			/**
 			 * @description Toggles visibility of the meetup group and its marker.
 			 */
-			this.toggleVisibility = function (x) {
+			this.toggleVisibility = function(x) {
 				self.geo.toggleMarker(x.marker);
 				self.meetup.toggleMeetup(x);
 			};
@@ -63,7 +63,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @description Assigns new map coordinates and calls meetup API.
 			 * @param {object} y - geocoded address
 			 */
-			this.setAddress = function (y) {
+			this.setAddress = function(y) {
 				self.clear();
 				self.form.address(y.addr());
 				var center = y.place.geometry.location;
@@ -74,18 +74,18 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			/**
 			 * @description Empties the address input field
 			 */
-			this.clearField = function () {
+			this.clearField = function() {
 				self.form.address('');
 			};
 			/**
 			 * @description Empties the address and meetup lists, removes markers and user alerts.
 			 */
-			this.clear = function () {
+			this.clear = function() {
 				self.callMade(false);
 				self.form.alertUser('');
 				self.form.list([]);
 				var list = self.meetup.list();
-				list.forEach(function (group) {
+				list.forEach(function(group) {
 					group.marker.setMap(null);
 				});
 				self.meetup.list([]);
@@ -94,7 +94,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @description Calls meetup API.
 			 * @param {object} center - latlng coordinates
 			 */
-			this.getAttractions = function (center) {
+			this.getAttractions = function(center) {
 				self.meetup.APIcall(center.lat(), center.lng(), 5, self.makeMtpList, self.form.alertUser);
 			};
 			/**
@@ -102,9 +102,9 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @param {object} data - geocoder result
 			 * @returns {object}
 			 */
-			this.makeMtpList = function (data) {
+			this.makeMtpList = function(data) {
 				if (data) {
-					data.forEach(function (result) {
+					data.forEach(function(result) {
 						var group = new self.meetup.Group(result);
 						group.marker = self.geo.makeMarker(group.venue, self.geo.map, group.eventName());
 						self.setVisibility(group);
@@ -117,7 +117,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @description Changes visibility of the meetup group
 			 * @param {object} group - meetup group
 			 */
-			this.setVisibility = function (group) {
+			this.setVisibility = function(group) {
 				group.visibility(self.geo.updateVisibility(group, group.distance(), self.form.radius()));
 				if (self.meetup.visibleMeetups() === false && group.visibility() === true) {
 					self.meetup.visibleMeetups(true);
@@ -126,7 +126,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			/**
 			 * @description Calls Google Maps API. Valides user input in the address input field.
 			 */
-			this.findAddress = function () {
+			this.findAddress = function() {
 				self.clear();
 				var address = self.form.address();
 				if (address === '') {
@@ -140,7 +140,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @param {string} status
 			 * @returns {function}
 			 */
-			this.cb = function (results, status) {
+			this.cb = function(results, status) {
 				if (status === gmaps.GeocoderStatus.OK) {
 					return self.checkResults(results);
 				}
@@ -149,7 +149,7 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @description Creates address list and alerts user.
 			 * @param {object} results - data returned from geocoder
 			 */
-			this.checkResults = function (results) {
+			this.checkResults = function(results) {
 				if (results.length >= 1) {
 					self.form.alertUser('Did you mean:');
 					results.forEach(self.makeAddrList);
@@ -162,13 +162,13 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			 * @param {object} x - data returned from geocoder
 			 * @returns {object}
 			 */
-			this.makeAddrList = function (x) {
+			this.makeAddrList = function(x) {
 				return new self.form.Item(x, x.formatted_address);
 			};
 			/**
 			 * @description Assigns initial data to the map.
 			 */
-			this.setDemo = (function () {
+			this.setDemo = (function() {
 				var x = 1;
 				self.form.radius(x);
 				self.meetup.radius(x);
