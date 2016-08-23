@@ -1,6 +1,6 @@
 # Neighborhood Map Project
 
-Pagespeed optimization of index.html and pizza.html
+Single page app that allows you to learn about upcoming meetups in your neighborhood.
 
 ### INSTRUCTIONS
 
@@ -21,14 +21,18 @@ Libraries:
 - [Oauth2](https://github.com/andreassolberg/jso)
 - [GMapsJS](https://hpneo.github.io/gmaps)
 
-Framework: [KnockoutJS](http://knockoutjs.com/index.html)
+Framework:
+- [KnockoutJS](http://knockoutjs.com/index.html)
 
 API data:
 - [Google Maps](https://maps.googleapis.com/maps/api/js)
 - [Meetup](https://secure.meetup.com/meetup_api)
 
-File and module loader: [RequireJS](http://requirejs.org)
-JS task runner: [Grunt](http://gruntjs.com)
+File and module loader:
+- [RequireJS](http://requirejs.org)
+
+JS task runner:
+- [Grunt](http://gruntjs.com)
 
 SVG icon for main marker: [Bryn Taylor](https://dribbble.com/shots/1934932-77-Essential-Icons-Free-Download)
 
