@@ -15,7 +15,7 @@
 		<h1>meetups in your neighborhood</h1>
 	</header>
 	<main>
-		<section>
+		<section class="map">
 			<h2>map of the area</h2>
 			<div id='map'></div>
 		</section>
@@ -29,7 +29,7 @@
 				<div class="form-elem">
 					<label for="range">Radius:</label>
 					<output for="range" data-bind="text: form.radius() + ' miles'"></output>
-					<input id="range" type="range" name="radius" min='1' max='5' step='1' data-bind="value: form.radius, click: updateMeetupMap" />
+					<input id="range" type="range" name="radius" min='1' max='5' step='1' data-bind="value: form.radius, event: {input: updateMeetupMap, click: updateMeetupMap, focus: updateMeetupMap}" />
 				</div>
 				<button class="form-elem" type="submit" id='submit'>Submit</button>
 			</form>
