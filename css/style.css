@@ -258,7 +258,7 @@ input,
 	width: 20px;
 	height: 20px;
 	position: absolute;
-	font-family: Arial, serif;
+	font-family: 'Arial', 'Times New Roman', serif;
 }
 
 .addresses li::before {

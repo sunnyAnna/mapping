@@ -34,6 +34,10 @@ requirejs(['app/meetup', 'app/form', 'app/map', 'knockout', 'gmaps', 'app/geocod
 			this.geo = new Map();
 			this.geocoder = new Geocoder();
 			this.callMade = ko.observable(false);
+			this.range = document.getElementById('range');
+			this.range.addEventListener('input', self.updateMeetupMap, false);
+			this.range.addEventListener('click', self.updateMeetupMap, false);
+			this.range.addEventListener('touchend', self.updateMeetupMap, false);
 			/**
 			 * @description Changes visibility of the meetup groups on the map and the list.
 			 */
