@@ -1,4 +1,4 @@
-/* RESET */
+	/* RESET */
 
 ul {
 	padding: 0;
@@ -30,12 +30,15 @@ main,
 	width: 100%;
 }
 
+.bottom {
+	padding-bottom: 30px;
+}
+
 
 /* FONTS */
 
 body {
 	font: 16px/1.2em 'Verdana', sans-serif;
-	padding-bottom: 30px;
 	margin-top: -12px;
 }
 
