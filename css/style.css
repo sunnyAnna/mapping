@@ -258,7 +258,7 @@ input,
 	width: 20px;
 	height: 20px;
 	position: absolute;
-	font-family: 'Arial', 'Times New Roman', serif;
+	font-family: 'Arial Unicode MS', 'Times New Roman', serif;
 }
 
 .addresses li::before {
@@ -275,7 +275,7 @@ input,
 }
 
 .meetups li::before {
-	content: '⭑';
+	content: '/2B51';
 	line-height: 1em;
 	margin-left: 3px;
 }
