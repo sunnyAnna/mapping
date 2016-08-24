@@ -6,6 +6,8 @@ Single page app that allows you to learn about upcoming meetups in your neighbor
 
 The project is being hosted on [this page](https://sunnyanna.github.io/mapping).
 
+Shortly after the page opens you'll be redirected to a Meetup.com sign in / sign up  page to grant access to your basic Meetup information in order for the app to work.
+
 To see a list of upcoming meetups in your neighborhood, type in the address and choose a radius you'd like to be covered (default: 1mi, max: 5mi). After the results are loaded you can use the radius slider to filter the meetups by distance from your address. Clicking on a name of a meetup will display more detailed info about the event.
 
 ### GOALS
