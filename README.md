@@ -4,7 +4,7 @@ Single page app that allows you to learn about upcoming meetups in your area.
 
 ### INSTRUCTIONS
 
-The project is being hosted on [this page](https://sunnyanna.github.io/mapping).
+The project is being hosted on [this page](https://sunnyanna.github.io/meetups_map/).
 
 Shortly after the page opens you'll be redirected to a Meetup.com sign in / sign up  page to grant access to your basic Meetup information in order for the app to work.
 
