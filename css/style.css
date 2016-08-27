@@ -34,6 +34,12 @@ main,
 	padding-bottom: 30px;
 }
 
+.form-element,
+.addresses ul li,
+.meetups > li > p {
+	cursor: pointer;
+}
+
 
 /* FONTS */
 
@@ -324,3 +330,4 @@ input,
 		width: 15px;
 		margin-top: -6px;
 	}
+}
