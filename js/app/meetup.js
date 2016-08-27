@@ -1,11 +1,11 @@
-define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
+define(['oauth2', 'jquery', 'knockout'], function (JSO, $, ko) {
 	'use strict';
 	/**
 	 * @description Creates meetup object
 	 * @constructor
 	 * @returns {object}
 	 */
-	var Meetup = function() {
+	var Meetup = function () {
 		var self = this;
 		this.activeMeetup = {};
 		this.radius = ko.observable();
@@ -13,11 +13,11 @@ define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
 		this.visibleMeetups = ko.observable(false);
 		this.info = ko.observable('meetup details:');
 		this.userAlerts = {
-			totalCount: ko.pureComputed(function() {
+			totalCount: ko.pureComputed(function () {
 				return '<h4>We found <span class="meetup-count">' + self.list().length + '</span> upcoming meetups within 5mi of this address.</h4><p>Use the radius slider to filter them by the distance.</p>';
 			}),
 			noFound: ko.observable('<h4>No upcoming meetups within 5mi of this address.</h4>'),
-			listing: ko.pureComputed(function() {
+			listing: ko.pureComputed(function () {
 				var k = self.visibleMeetups() === true ? 'Below are the meetups ' : 'There are no upcoming meetups ';
 				return '<h4>' + k + '<span>within ' + self.radius() + 'mi</span>.</h4>';
 			})
@@ -40,18 +40,18 @@ define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
 		 * @param {object} data - data returned from the Meetup API
 		 * @returns {object}
 		 */
-		this.Group = function(data) {
+		this.Group = function (data) {
 			this.eventName = ko.observable(data.name);
 			this.rsvp = ko.observable('<span class="fontsy">Current RSVP count: </span>' + data.yes_rsvp_count);
 			this.url = ko.observable(data.event_url);
 			this.groupName = ko.observable(data.group.name);
 			this.time = new Date(data.time);
-			this.date = ko.computed(function() {
+			this.date = ko.computed(function () {
 				var d = this.time;
 				var date = d.toLocaleString(navigator.language, self.dateOptions.date);
 				return '<span class="fontsy">Date: </span>' + date;
 			}, this);
-			this.hour = ko.computed(function() {
+			this.hour = ko.computed(function () {
 				var d = this.time;
 				var hour = d.toLocaleTimeString(navigator.language, self.dateOptions.hour);
 				return '<span class="fontsy">Time: </span>' + hour;
@@ -141,7 +141,7 @@ define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
 		providerID: "meetup",
 		client_id: "v7k7eb2btu206qupdl7tch34di",
 		authorization: "https://secure.meetup.com/oauth2/authorize",
-		redirect_uri: "https://sunnyanna.github.io/mapping/",
+		redirect_uri: "https://sunnyanna.github.io/meetups_map/",
 		response_type: "token"
 	});
 	JSO.enablejQuery($);
@@ -149,26 +149,26 @@ define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
 	/**
 	 * @description Sends authorization request. Requests token and saves it.
 	 */
-	Meetup.prototype.init = function() {
+	Meetup.prototype.init = function () {
 		if (!window.location.hash) {
-			jso.getToken(function(token) {});
+			jso.getToken(function (token) {});
 		}
 		jso.callback(window.location.href, Meetup.prototype.APIcall, jso.providerID);
 	};
 	/**
 	 * @description Meetup API call
 	 */
-	Meetup.prototype.APIcall = function(lat, lon, radius, callback_1, callback_2) {
+	Meetup.prototype.APIcall = function (lat, lon, radius, callback_1, callback_2) {
 		var url = "https://api.meetup.com/2/open_events?sign=true&photo-host=public&page=20&lat=" + lat + "&lon=" + lon + "&radius=" + radius;
 		jso.ajax({
 			url: url,
 			dataType: 'jsonp',
-			success: function(data) {
+			success: function (data) {
 				if (callback_1) {
 					return callback_1(data.results);
 				}
 			},
-			failure: function(err) {
+			failure: function (err) {
 				if (callback_2) {
 					return callback_2('Error in Meetup search. Please try again.');
 				}
@@ -178,7 +178,7 @@ define(['oauth2', 'jquery', 'knockout'], function(JSO, $, ko) {
 	/**
 	 * @description Toggles visibility of the meetup's marker and list tab view
 	 */
-	Meetup.prototype.toggleMeetup = function(group) {
+	Meetup.prototype.toggleMeetup = function (group) {
 		if (self.activeMeetup && group !== self.activeMeetup) {
 			self.activeMeetup.details(false);
 		}
