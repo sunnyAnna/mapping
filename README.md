@@ -1,6 +1,6 @@
-# Neighborhood Map Project
+# Meetups Map
 
-Single page app that allows you to learn about upcoming meetups in your neighborhood.
+Single page app that allows you to learn about upcoming meetups in your area.
 
 ### INSTRUCTIONS
 
